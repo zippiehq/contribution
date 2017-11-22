@@ -53,7 +53,8 @@ router.beforeEach(function (to, from, next) {
   next()
 })
 
-window.WEB3 = new Web3(Web3.givenProvider || 'ws://localhost:8546')
+window.WEB3_READY = false
+window.WEB3 = new Web3(Web3.givenProvider || 'http://localhost:8545')
 
 var vue = new Vue({
   el: '#app',
@@ -61,6 +62,10 @@ var vue = new Vue({
   router,
   template: '<App/>',
   components: { App }
+})
+
+window.WEB3.eth.net.getId().then((result) => {
+  vue.$data.models.accounts = []
 })
 
 vue

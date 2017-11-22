@@ -4,8 +4,7 @@
       <md-card> 
         <div v-if="$root.models.accounts == null">Unable to connect to an Ethereum node.</div>
         <div v-if="$root.models.accounts != null && $root.models.accounts.length == 0">Unable to locate any accounts. If you're using metamask, please unlock (click MetaMask icon</div>
-        <div>Looking for a Web3 provider..</div>
-        <div>Using MetaMask.</div>
+        <div v-if="$root.models.accounts != null && $root.models.accounts.length > 0">{{ $root.models.accounts }}</div>
         <div>Pick an account. Use this address in any communications with
         us.</div>
         <div>The 5 ETH offer.</div>
@@ -53,14 +52,14 @@ export default {
   name: 'frontpage',
   methods: {
     refreshAccounts: function () {
+      if (this.$root.models.accounts == null) {
+        return
+      }
       window.WEB3.eth.getAccounts().then((result) => {
         this.$root.models.accounts = result
         setTimeout(() => {
           this.refreshAccounts()
         }, 1000)
-      }).catch((err) => {
-        console.log(err)
-        this.$root.models.accounts = null
       })
     }
   },

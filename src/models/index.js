@@ -3,7 +3,7 @@ export default {
     barstate: 0,
     projects: 1
   },
-  accounts: [],
+  accounts: null,
   startups: [
     {
       title: 'Zipper Platform',
