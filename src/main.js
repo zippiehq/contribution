@@ -53,7 +53,6 @@ router.beforeEach(function (to, from, next) {
   next()
 })
 
-window.WEB3_READY = false
 window.WEB3 = new Web3(Web3.givenProvider || 'http://localhost:8545')
 
 var vue = new Vue({
