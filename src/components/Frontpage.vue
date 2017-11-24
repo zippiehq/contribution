@@ -1,9 +1,17 @@
 <template>
   <div id="frontpage"> 
     <div width="100%" style="margin-top: 0%">
-      <md-card> 
-        <div v-if="$root.models.accounts == null">Unable to connect to an Ethereum node.</div>
-        <div v-if="$root.models.accounts != null && $root.models.accounts.length == 0">Unable to locate any accounts. If you're using metamask, please unlock (click MetaMask icon</div>
+      <md-card>
+       <md-card-content> 
+        <div>
+        <h1>Welcome to Zipper Contribution Page</h1>
+        In order to contribute to the Zipper project, you will need to set up a
+        <a href="https://etherscan.io/address/0xe2e36080d4952ae9e90a9bb87ec2c9a1e7781976#code" target="_blank">Contribution Wallet</a> and transfer some funds into it. A contribution wallet is an account that requires two parties, you and Zipper Global Ltd., to agree in order to transfer anything
+from. When funds have been transferred, when we're ready, we'll contact you on your e-mail to re-visit this site, to further process your contribution. Until your contribution is fully processed, no offer, sale, or any form of transaction between you and Zipper Global Ltd. has been entered into.
+        </div>
+        <br>
+        <div v-if="$root.models.accounts == null">Unable to connect to an Ethereum node, or we're still connecting. Please install an Ethereum client such as <a href="https://parity.io">Parity</a> or if you use Chrome browser, <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn">the MetaMask browser extension</a></div>
+        <div v-if="$root.models.accounts != null && $root.models.accounts.length == 0">Unable to locate any accounts. If you're using metamask, please unlock (click MetaMask icon). This may also disappear in a few seconds as your Ethereum node responds</div>
         <div v-if="$root.models.accounts != null && $root.models.accounts.length > 0">
            <md-input-container>
              <label for="account">Click to pick your Ethereum account</label> 
@@ -18,7 +26,7 @@
         <div v-if="$data.account != '' && $data.multisigs_found == null"> 
             Querying if you have already started the contribution process with this address.
         </div>
-        <div v-if="$data.account != '' && $data.multisigs_found != null && $data.multisigs_found == false">
+        <div v-if="$data.account != '' && $data.txhash == null"> <!-- FIXME $data.multisigs_found != null && $data.multisigs_found == false"> -->
             You have not started the contribution process with this address.
             <md-input-container>
                 <label>What is your full name?</label>
@@ -34,21 +42,34 @@
             </md-input-container>
             <md-input-container>
              	<label>Provide in this field any additional comments that help us process your contribution better</label>
-                <md-textarea></md-textarea>
+                <md-textarea v-model="additional"></md-textarea>
             </md-input-container> 
                 
-             <md-checkbox class="md-warn">I confirm I'm not a resident of any of these countries: Afghanistan, Bosnia and Herzegovina, Central African Republic, China, Cuba, Democratic Republic of the Congo, Democratic People’s Republic of Korea, Eritrea, Ethiopia, Guinea-Bissau, Iran, Iraq, Libya, Lebanon, New Zealand, Somalia, South Sudan, Sudan, Syria, Sri Lanka, Tunisia, Vanuatu, and Yemen.<br></md-checkbox>
-             <md-checkbox class="md-warn">I accept that creating a Contribution Wallet will cost me approximately 0.0005 ETH in blockchain processing costs.</md-checkbox>
-             <md-checkbox class="md-warn">I accept that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable by approval of the transaction by both yourself and Zipper Global Ltd.</md-checkbox>
-             <md-checkbox class="md-warn">I accept that if I lose access to my private key to the Ethereum address {{ $data.account }} I will be unable to access the contents of the Contribution Wallet and neither will Zipper Global Ltd.</md-checkbox>
-             <md-button class="md-raised md-primary">Submit my information to Zipper and create a Contribution Wallet</md-button><br>
+             <md-checkbox class="md-warn" v-model="resident">I confirm I'm not a resident of any of these countries: Afghanistan, Bosnia and Herzegovina, Central African Republic, China, Cuba, Democratic Republic of the Congo, Democratic People’s Republic of Korea, Eritrea, Ethiopia, Guinea-Bissau, Iran, Iraq, Libya, Lebanon, New Zealand, Somalia, South Sudan, Sudan, Syria, Sri Lanka, Tunisia, Vanuatu, and Yemen.</md-checkbox>
+             <md-checkbox class="md-warn" v-model="costs">I accept that creating a Contribution Wallet will cost me approximately {{ $data.cwCost }} ETH in blockchain processing costs.</md-checkbox>
+             <md-checkbox class="md-warn" v-model="mutual">I accept that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable by approval of the transaction by both yourself and Zipper Global Ltd.</md-checkbox>
+             <md-checkbox class="md-warn" v-model="loss">I accept that if I lose access to my private key of the Ethereum address {{ $data.account }} I will be unable to access the contents of the Contribution Wallet and neither will Zipper Global Ltd.</md-checkbox>
+             <md-checkbox class="md-warn" v-model="terms">I agree to the <a href="/#terms" target="_blank">Zipper Contribution Terms</a></md-checkbox><br>
+
+             <md-button class="md-raised md-primary" @click="createWallet()" >Submit my information to Zipper and create a Contribution Wallet</md-button><br>
         </div>
         <div v-if="$data.account != '' && $data.multisigs_found != null && $data.multisigs.length > 0">
             <div v-for="item in $data.multisigs">
-               Multisig {{ item.returnValues._multisig }} Balance {{ item.accountBalance < 0 ? 'loading' : item.accountBalance }}
+               <h2>Contribution Wallet {{ item.returnValues._multisig }}</h2>
+               <div v-if="item.accountBalance >= 0">Current balance: {{ item.accountBalance }}</div>
  
-                             
+               <md-input-container>
+                  <label>Please enter amount of ETH to send to this Contribution Wallet</label>
+                  <md-input v-model="topup[item.returnValues._multisig]" required></md-input>
+               </md-input-container>
+               Remember that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable by approval of the transaction by both yourself and Zipper Global Ltd.<br>
+               Blockchain transaction cost: {{ $data.txCost }} ETH (2-5 minutes to complete)<br>
+               <div v-if="$data.txtopup[item.returnValues._multisig] != null">Top-up transaction in progress (Transaction hash: <a v-bind:href="'https://etherscan.io/tx/' + $data.txtopup[item.returnValues._multisig]" target="_blank">{{ $data.txtopup[item.returnValues._multisig] }}</a>.</div>
+               <md-button class="md-raised md-primary" @click="sendFunds(Number($data.topup[item.returnValues._multisig]), item.returnValues._multisig, $data.account)" v-if="$data.topup[item.returnValues._multisig] != null && $data.topup[item.returnValues._multisig] > 0">Send {{ Number($data.topup[item.returnValues._multisig]) }} ETH to this Contribution Wallet</md-button>
             </div>
+        </div>
+        <div v-if="$data.txhash != null">
+           Contribution Wallet creation transaction in progress. Transaction hash <a v-bind:href="'https://etherscan.io/tx/' + $data.txhash" target="_blank">{{ $data.txhash }}</a>. It can take up to 2-5 minutes to confirm, depending on network conditions. Please wait....
         </div>
         <!-- 
        
@@ -89,6 +110,7 @@
         pre-installed.<br>
         Next step: Convert your contribution into ZIP.<br>
        </div>  -->
+       </md-card-content>
       </md-card>
     </div>
   </div>
@@ -103,7 +125,23 @@ export default {
     accountBalance: -1,
     multisigfactory: null,
     multisigs: [],
-    multisigs_found: null
+    multisigs_found: null,
+    safeLow: 0.5,
+    safeLowWait: 2.7,
+    cwCost: -1,
+    txCost: -1,
+    fullname: '',
+    email: '',
+    countries: '',
+    additional: '',
+    resident: false,
+    costs: false,
+    mutual: false,
+    loss: false,
+    terms: false,
+    txhash: null,
+    topup: {},
+    txtopup: {}
   }),
   methods: {
     refreshAccounts: function () {
@@ -112,7 +150,7 @@ export default {
         setTimeout(() => {
           this.refreshAccounts()
           this.reloadMultisigBalance()
-        }, 10000)
+        }, 2000)
       })
     },
     reloadMultisigBalance: function () {
@@ -123,6 +161,7 @@ export default {
       })
     },
     accountChanged: function (value) {
+      this.$data.txhash = null
       window.WEB3.eth.getBalance(value).then((result) => {
         this.$data.accountBalance = window.WEB3.utils.fromWei(result, 'ether')
       })
@@ -138,6 +177,48 @@ export default {
           item.accountBalance = -1
         })
         this.reloadMultisigBalance()
+      })
+      /*
+      var xmlhttp = new XMLHttpRequest()
+      var url = 'https://ethgasstation.info/json/ethgasAPI.json'
+      var obj = this
+      xmlhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+          var myArr = JSON.parse(this.responseText)
+          obj.$data.safeLow = myArr.safeLow + 0.25
+          obj.$data.safeLowWait = myArr.safeLowWait
+        }
+      }
+      xmlhttp.open('GET', url, true)
+      xmlhttp.send()
+      */
+      this.$data.cwCost = window.WEB3.utils.fromWei(window.WEB3.utils.toWei((this.$data.safeLow * 1254611).toString(), 'gwei'), 'ether')
+      this.$data.txCost = window.WEB3.utils.fromWei(window.WEB3.utils.toWei((this.$data.safeLow * 100000).toString(), 'gwei'), 'ether')
+    },
+    createWallet: function () {
+      var obj = this
+      this.$data.multisigfactory.methods.createMultisig().send({from: this.$data.account, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 1254611})
+      .on('transactionHash', function (hash) {
+        console.log('txhash ' + hash)
+        obj.$data.txhash = hash
+      })
+      .on('confirmation', function (confirmationNumber, receipt) {
+        if (confirmationNumber === 5) {
+          obj.accountChanged(obj.$data.account)
+        }
+        console.log('confirmation ' + confirmationNumber + ' receipt ' + receipt)
+      })
+      .on('error', console.error)
+    },
+    sendFunds: function (amount, destination, origin) {
+      var obj = this
+      window.WEB3.eth.sendTransaction({from: origin, to: destination, value: window.WEB3.utils.toWei(amount.toString(), 'ether'), gas: 100000, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei')})
+      .on('transactionHash', function (hash) {
+        obj.$data.txtopup[destination] = hash
+      })
+      .on('confirmation', function (confirmationNumber, receipt) {
+        obj.$data.txtopup[destination] = null
+        obj.reloadMultisigBalance()
       })
     }
   },
