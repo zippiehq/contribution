@@ -62,7 +62,7 @@ from. When funds have been transferred, when we're ready, we'll contact you on y
         </div>
         <div v-if="$data.account != '' && $data.multisigs_found != null && $data.multisigs.length > 0">
             <div v-for="item in $data.multisigs">
-               <h2>Contribution Wallet {{ item.returnValues._multisig }}</h2>
+               <h2>Contribution Wallet <a v-bind:href="'https://etherscan.io/address/' + item.returnValues._multisig" target="_blank">{{ item.returnValues._multisig }}</a></h2>
                <div v-if="item.accountBalance > 0">Current balance in wallet: {{ item.accountBalance }}. We will be on touch on your e-mail about your contribution when we're ready. You do not need to take any further actions.</div>
                <div v-if="item.accountBalance == 0">Wallet is currently empty. Please top up the Contribution Wallet. When we're ready, we'll be in touch after this wallet contains funds.</div>
                <md-input-container>
