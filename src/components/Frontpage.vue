@@ -205,6 +205,7 @@ export default {
       .on('confirmation', function (confirmationNumber, receipt) {
         obj.$data.txtopup[destination] = null
         obj.reloadMultisigBalance()
+        obj.accountChanged(obj.$data.account)
       })
     }
   },
