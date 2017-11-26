@@ -10,7 +10,8 @@
 from. When funds have been transferred, when we're ready, we'll contact you on your e-mail to re-visit this site, to further process your contribution. Until your contribution is fully processed, no offer, sale, or any form of transaction between you and Zipper Global Ltd. has been entered into.
         </div>
         <br>
-        <div v-if="$root.models.accounts == null">Unable to connect to an Ethereum node, or we're still connecting. Please install an Ethereum client such as <a href="https://parity.io">Parity</a> or if you use Chrome browser, <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn">the MetaMask browser extension</a></div>
+        <div v-if="$root.models.accounts == null">Unable to connect to an Ethereum node, or we're still connecting. Please install an Ethereum client such as <a href="https://parity.io">Parity</a> or if you use Chrome browser, <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn">the MetaMask browser extension</a>
+        and <a href="/">reload this page</a></div>
         <div v-if="$root.models.accounts != null && $root.models.accounts.length == 0">Unable to locate any accounts. If you're using metamask, please unlock (click MetaMask icon). This may also disappear in a few seconds as your Ethereum node responds</div>
         <div v-if="$root.models.accounts != null && $root.models.accounts.length > 0">
            <md-input-container>
@@ -26,14 +27,15 @@ from. When funds have been transferred, when we're ready, we'll contact you on y
         <div v-if="$data.account != '' && $data.multisigs_found == null"> 
             Querying if you have already started the contribution process with this address.
         </div>
-        <div v-if="$data.account != '' && $data.txhash == null"> <!-- FIXME $data.multisigs_found != null && $data.multisigs_found == false"> -->
+        <div v-if="$data.account != '' && $data.txhash == null"> <!-- FIXME $data.multisigs_found != null && $data.multisigs_found == false"> --> 
+            <br>
             You have not started the contribution process with this address.
             <md-input-container>
                 <label>What is your full name?</label>
                 <md-input v-model="fullname" required></md-input>
             </md-input-container>
             <md-input-container>
-                <label>What e-mail can we contact you on? (We will contact you from @zipperglobal.com e-mails)</label>
+                <label>What e-mail can we contact you on? (We will contact you from @zipperglobal.com-mails). This is important to be correct for us to follow up on your contribution.</label>
                 <md-input v-model="email" required></md-input>
             </md-input-container>
             <md-input-container>
@@ -50,8 +52,13 @@ from. When funds have been transferred, when we're ready, we'll contact you on y
              <md-checkbox class="md-warn" v-model="mutual">I accept that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable by approval of the transaction by both yourself and Zipper Global Ltd.</md-checkbox>
              <md-checkbox class="md-warn" v-model="loss">I accept that if I lose access to my private key of the Ethereum address {{ $data.account }} I will be unable to access the contents of the Contribution Wallet and neither will Zipper Global Ltd.</md-checkbox>
              <md-checkbox class="md-warn" v-model="terms">I agree to the <a href="/#terms" target="_blank">Zipper Contribution Terms</a></md-checkbox><br>
-
-             <md-button class="md-raised md-primary" @click="createWallet()" >Submit my information to Zipper and create a Contribution Wallet</md-button><br>
+             <div v-if="this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.terms && this.$data.countries.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0">
+               <md-button class="md-raised md-primary" @click="createWallet()" >Submit my information to Zipper and create a Contribution Wallet</md-button><br> 
+               Pressing this will likely pop-up a request from your Ethereum node or Browser plugin to accept and sign this transaction. Only click once; unless you've rejected the request in your Ethereum environment.
+             </div>
+             <div v-if="!(this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.terms && this.$data.countries.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0)">
+               <md-button class="md-raised md-primary" disabled>Submit my information to Zipper and create a Contribution Wallet</md-button><br> 
+             </div>
         </div>
         <div v-if="$data.account != '' && $data.multisigs_found != null && $data.multisigs.length > 0">
             <div v-for="item in $data.multisigs">
@@ -69,47 +76,8 @@ from. When funds have been transferred, when we're ready, we'll contact you on y
             </div>
         </div>
         <div v-if="$data.txhash != null">
-           Contribution Wallet creation transaction in progress. Transaction hash <a v-bind:href="'https://etherscan.io/tx/' + $data.txhash" target="_blank">{{ $data.txhash }}</a>. It can take up to 2-5 minutes to confirm, depending on network conditions. Please wait....
+           Contribution Wallet creation transaction is in progress. Transaction hash is <a v-bind:href="'https://etherscan.io/tx/' + $data.txhash" target="_blank">{{ $data.txhash }}</a>. It can take up to 2-5 minutes to confirm, depending on network conditions. Please wait....
         </div>
-        <!-- 
-       
-        <div>Pick an account. Use this address in any communications with
-        us.</div>
-        <div>The 5 ETH offer.</div>
-        <div>This will beyond the contribution cost roughly 0.0005 ETH in
-        blockchain processing fees. It may take up to a few minutes to
-        complete each step. You can always return to this page to see
-        current status. (FIXME)</div>
-        <div>How much (in ETH) do you want to contribute to this
-        project<br>
-        What e-mail can we contact you on?<br>
-        Please specify any of countries that you are a resident, citizen of
-        or currently located in that may affect our ability to process your
-        contribution.<br>
-        Provide in this field any additional comments to help us process your contribution
-        better.<br>
-        Click here to begin the contribution, you may be queried by your
-        Ethereum wallet to accept the transaction (roughly 0.00XXX ETH).<br> 
-        You'll possibly be requested to submit "KYC" information in our
-        following communications with you, through this website in order to
-        have your contribution processed.<br>
-        We have deployed the contribution multisig with you and Zipper as
-        owners. It requires both owners to perform any transactions. You can verify the
-        transaction and source code of the multisig here.<br>
-        Click here if everything seems proper and send<br>
-        Done! See transaction, multisig here<br>
-        We'll be in touch on your e-mail, please whitelist contribution@zipperglobal.com
-        in your spam-filters. We have sent two e-mails already now to inform
-        you of the completion of both transactions. You will not be asked to
-        send more money.<br>
-        If you encounter any problems, or have doubts, always return to
-        https://contribution.zipperglobal.com and click 'Contact' to get
-        assistance.<br>
-        Next step: Please upload your KYC information here.<br>
-        Next step: Please provide shipping information for the Sony Xperia with Zipper
-        pre-installed.<br>
-        Next step: Convert your contribution into ZIP.<br>
-       </div>  -->
        </md-card-content>
       </md-card>
     </div>
@@ -178,7 +146,7 @@ export default {
         })
         this.reloadMultisigBalance()
       })
-      /*
+      /* XXX fixme
       var xmlhttp = new XMLHttpRequest()
       var url = 'https://ethgasstation.info/json/ethgasAPI.json'
       var obj = this
@@ -196,7 +164,22 @@ export default {
       this.$data.txCost = window.WEB3.utils.fromWei(window.WEB3.utils.toWei((this.$data.safeLow * 100000).toString(), 'gwei'), 'ether')
     },
     createWallet: function () {
+      var xmlhttp = new XMLHttpRequest()
+      var url = 'http://contribution.zipperglobal.com/submit'
       var obj = this
+      xmlhttp.open('POST', url)
+      xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+        }
+      }
+      xmlhttp.send(JSON.stringify({account: this.$data.account,
+        fullname: this.$data.fullname,
+        email: this.$data.email,
+        countries: this.$data.countries,
+        additional: this.$data.additional,
+        bools: [this.$data.resident, this.$data.costs, this.$data.mutual, this.$data.terms]}))
+
       this.$data.multisigfactory.methods.createMultisig().send({from: this.$data.account, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 1254611})
       .on('transactionHash', function (hash) {
         console.log('txhash ' + hash)
