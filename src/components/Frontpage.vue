@@ -27,7 +27,7 @@ from. When funds have been transferred, when we're ready, we'll contact you on y
         <div v-if="$data.account != '' && $data.multisigs_found == null"> 
             Querying if you have already started the contribution process with this address.
         </div>
-        <div v-if="$data.account != '' && $data.txhash == null"> <!-- FIXME $data.multisigs_found != null && $data.multisigs_found == false"> --> 
+        <div v-if="$data.account != '' && $data.txhash == null && $data.multisigs_found != null && $data.multisigs_found == false">
             <br>
             You have not started the contribution process with this address.
             <md-input-container>
@@ -63,20 +63,23 @@ from. When funds have been transferred, when we're ready, we'll contact you on y
         <div v-if="$data.account != '' && $data.multisigs_found != null && $data.multisigs.length > 0">
             <div v-for="item in $data.multisigs">
                <h2>Contribution Wallet {{ item.returnValues._multisig }}</h2>
-               <div v-if="item.accountBalance >= 0">Current balance: {{ item.accountBalance }}</div>
- 
+               <div v-if="item.accountBalance > 0">Current balance in wallet: {{ item.accountBalance }}. We will be on touch on your e-mail about your contribution when we're ready. You do not need to take any further actions.</div>
+               <div v-if="item.accountBalance == 0">Wallet is currently empty. Please top up the Contribution Wallet. When we're ready, we'll be in touch after this wallet contains funds.</div>
                <md-input-container>
                   <label>Please enter amount of ETH to send to this Contribution Wallet</label>
                   <md-input v-model="topup[item.returnValues._multisig]" required></md-input>
                </md-input-container>
-               Remember that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable by approval of the transaction by both yourself and Zipper Global Ltd.<br>
-               Blockchain transaction cost: {{ $data.txCost }} ETH (2-5 minutes to complete)<br>
+
+               Remember that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable by approval of the transaction by both yourself and Zipper Global Ltd.
+               Sending funds will incur a transaction cost of roughly {{ $data.txCost }} ETH and take 2-5 minutes to complete. <br>
+              
                <div v-if="$data.txtopup[item.returnValues._multisig] != null">Top-up transaction in progress (Transaction hash: <a v-bind:href="'https://etherscan.io/tx/' + $data.txtopup[item.returnValues._multisig]" target="_blank">{{ $data.txtopup[item.returnValues._multisig] }}</a>.</div>
                <md-button class="md-raised md-primary" @click="sendFunds(Number($data.topup[item.returnValues._multisig]), item.returnValues._multisig, $data.account)" v-if="$data.topup[item.returnValues._multisig] != null && $data.topup[item.returnValues._multisig] > 0">Send {{ Number($data.topup[item.returnValues._multisig]) }} ETH to this Contribution Wallet</md-button>
             </div>
         </div>
         <div v-if="$data.txhash != null">
-           Contribution Wallet creation transaction is in progress. Transaction hash is <a v-bind:href="'https://etherscan.io/tx/' + $data.txhash" target="_blank">{{ $data.txhash }}</a>. It can take up to 2-5 minutes to confirm, depending on network conditions. Please wait....
+           <br>
+           Contribution Wallet creation transaction is in progress. Transaction hash is <a v-bind:href="'https://etherscan.io/tx/' + $data.txhash" target="_blank">{{ $data.txhash }}</a>. It can take up to 2-5 minutes to confirm, depending on network conditions. Please wait... This page will update automatically.
         </div>
        </md-card-content>
       </md-card>
