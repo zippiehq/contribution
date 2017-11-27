@@ -6,7 +6,7 @@
 					<md-icon md-src="static/img/zipper_logo_square_transparent_30x30.png"></md-icon>
 				</md-button>
 				<span style="flex: 1">
-					<span style="display:inline-block;"><md-button v-bind:class="$route.name == 'Terms' ? 'md-accent' : ''" @click="$router.push('/terms')">Terms</md-button></span>
+					<span style="display:inline-block;"><md-button v-bind:class="$route.name == 'Terms' ? 'md-accent' : ''" @click="$router.push('/terms')">Terms &amp; Conditions</md-button></span>
 					<span style="display:inline-block;"><md-button v-bind:class="$route.name == 'FAQ' ? 'md-accent' : ''" @click="$router.push('/faq')">FAQ</md-button></span>
 				</span>
 				<span style="display:inline-block;"><md-button v-bind:class="$route.name == 'Contact' ? 'md-accent' : ''" @click="$router.push('/contact')">Contact</md-button></span>
