@@ -28,7 +28,7 @@ export default {
 
 <style>
 .myapp {
-  font-family: "Open Sans";
+  font-family: 'Libre Franklin', sans-serif;
 }
 
 .primarycolor {
