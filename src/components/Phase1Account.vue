@@ -5,6 +5,7 @@
        <md-card-content> 
         <div align=center v-if="$route.params.step == 1">
         <h1>Step 4/4</h1>
+        <b>Success!</b>
         Your funds were transferred to your Contribution wallet. <a v-bind:href="'https://etherscan.io/tx/' + $data.txtopup" target="_blank">View transaction</a><br>
 <br>
         <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0">
@@ -13,8 +14,8 @@
             </div>
         </div>             
 
-You do not need to take any further actions for now.<br><br>
-When we are ready, we will invite you via email to finalize your contribution: to submit your KYC documents and confirm your contribution transaction.<br><br>
+<b>You do not need to take any further actions for now.</b><br><br>
+Soon, we will invite you via email to finalize your contribution: to submit your KYC documents and confirm your contribution transaction.<br><br>
 If you want to transfer more funds to your Contribution Wallet, you can start the Phase 1 again from the Contribution main page. <br><br>
         <md-button class="md-raised md-primary" @click="goToZipper()">Go to zipperglobal.com</md-button>
 
@@ -63,21 +64,21 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
                 </md-select>
            </md-input-container>
             <md-input-container>
-             	<label>Any additional comments that help us process your contribution better</label>
+             	<label>Any additional comments that help us process your contribution better (optional)</label>
                 <md-textarea v-model="additional"></md-textarea>
             </md-input-container> 
 
              <md-checkbox class="md-warn" v-model="resident">I confirm I'm not a resident of any of these countries: Afghanistan, Bosnia and Herzegovina, Central African Republic, China, Cuba, Democratic Republic of the Congo, Democratic People’s Republic of Korea, Eritrea, Ethiopia, Guinea-Bissau, Iran, Iraq, Libya, Lebanon, New Zealand, Somalia, South Sudan, Sudan, Syria, Sri Lanka, Tunisia, Vanuatu, and Yemen.</md-checkbox>
              <md-checkbox class="md-warn" v-model="costs">I accept that creating a Contribution Wallet will cost me approximately {{ $data.cwCost }} ETH in blockchain processing costs.</md-checkbox>
-             <md-checkbox class="md-warn" v-model="mutual">I accept that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable by approval of the transaction by both yourself and Zipper Global Ltd.</md-checkbox>
+             <md-checkbox class="md-warn" v-model="mutual">I accept that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable from it by approval of the transaction by both myself and Zipper Global Ltd.</md-checkbox>
              <md-checkbox class="md-warn" v-model="loss">I accept that if I lose access to my private key of the Ethereum address {{ $route.params.account }} I will be unable to access the contents of the Contribution Wallet and neither will Zipper Global Ltd.</md-checkbox>
 
              <div v-if="this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.resident && this.$data.residentcountry.length > 0 && this.$data.citizencountry.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0 && this.$data.email2.length > 0 && this.$data.email === this.$data.email2">
-               <md-button class="md-raised md-primary" @click="createWallet()">Submit my information to Zipper and create a Contribution Wallet</md-button><br> 
+               <md-button class="md-raised md-primary" @click="createWallet()">Submit my info &amp; create a Contribution Wallet</md-button><br> 
                Pressing this will likely pop-up a request from your Ethereum node or Browser plugin to accept and sign this transaction. Only click once; unless you've rejected the request in your Ethereum environment.
              </div>
              <div v-if="!(this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.resident && this.$data.residentcountry.length > 0 && this.$data.citizencountry.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0 && this.$data.email2.length > 0 && this.$data.email === this.$data.email2)">
-               <md-button class="md-raised md-primary" disabled>Submit my information to Zipper and create a Contribution Wallet</md-button><br> 
+               <md-button class="md-raised md-primary" disabled>Submit my info &amp; create a Contribution Wallet</md-button><br> 
              </div>
         </div>
         <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.txtopup == null">
@@ -85,7 +86,7 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
                You now have a <a v-bind:href="'https://etherscan.io/address/' + item.address" target="_blank">Contribution Wallet</a> with {{ item.accountBalance }} ETH in it.<br>
                <br>
 
-               Next, transfer funds from your ETH wallet to your Contribution Wallet.
+               <b>Next, transfer funds from your ETH wallet to your Contribution Wallet.</b>
                               
                <md-input-container>
                   <label>Please enter amount of ETH to send to this Contribution Wallet</label>
@@ -101,14 +102,13 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
 
          <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.txtopup != null" style="border-color: black; border-style: solid">
                <img src="static/img/ajax-loader.gif"><br>
-               Top-up transaction in progress, do not close this window<br><a v-bind:href="'https://etherscan.io/tx/' + $data.txtopup" target="_blank">View transaction {{ $data.txtopup }}</a><br><br>Please wait..
+               Top-up transaction in progress, do not close this window<br><a v-bind:href="'https://etherscan.io/tx/' + $data.txtopup" target="_blank">View transaction</a><br><br>Please wait..
          </div>
         
         <div v-if="$data.txhash != null" style="border: color: black; border-style: solid">
            <img src="static/img/ajax-loader.gif"><br>
-           Contribution Wallet creation transaction is in progress. Transaction hash is <a v-bind:href="'https://etherscan.io/tx/' + $data.txhash" target="_blank">{{ $data.txhash }}</a>. It can take up to 2-5 minutes to confirm, depending on network conditions. Please wait... This page will update automatically.
+           Contribution Wallet creation transaction is in progress. <a v-bind:href="'https://etherscan.io/tx/' + $data.txhash" target="_blank">View transaction</a>. It can take up to 2-5 minutes to confirm, depending on network conditions. Please wait... This page will update automatically.
         </div>
-
 
         </div>
        </md-card-content>
@@ -234,8 +234,8 @@ export default {
   beforeMount () {
     this.updateBalance()
     this.checkMultisigs()
-    this.$data.cwCost = window.WEB3.utils.fromWei(window.WEB3.utils.toWei((this.$data.safeLow * 1254611).toString(), 'gwei'), 'ether')
-    this.$data.txCost = window.WEB3.utils.fromWei(window.WEB3.utils.toWei((this.$data.safeLow * 100000).toString(), 'gwei'), 'ether')
+    this.$data.cwCost = Number(window.WEB3.utils.fromWei(window.WEB3.utils.toWei((this.$data.safeLow * 1254611).toString(), 'gwei'), 'ether')).toFixed(5)
+    this.$data.txCost = Number(window.WEB3.utils.fromWei(window.WEB3.utils.toWei((this.$data.safeLow * 100000).toString(), 'gwei'), 'ether')).toFixed(5)
   }
 }
 </script>
