@@ -23,7 +23,8 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
          <h1 v-if="$data.multisigs_found == null || $data.multisigs_found == false">Step 2/4</h1>
          <h1 v-if="$data.multisigs_found != null && $data.multisigs_found == true">Step 3/4</h1>
          Selected account: <b>{{ $route.params.account }}</b><br>
-         <div v-if="$data.accountBalance >= 0">{{ $data.accountBalance }} ETH currently in this account.</div><br>
+         <div v-if="$data.accountBalance > 0">{{ $data.accountBalance }} ETH currently in this account.</div><br>
+         <div v-if="$data.accountBalance == 0">0 ETH currently in this account. You should top it up before being able to use the contribution process</div><br>
 
          <md-button class="md-raised md-primary" @click="$router.push('/phase1')">Select another account</md-button><br><br>
 
@@ -36,28 +37,33 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
             <br>
             You have not yet started the contribution process with this Ethereum address.<br>
             <md-input-container>
-                <label>What is your full name? (as in your identification document)</label>
+                <label>Your full name</label>
                 <md-input v-model="fullname" required></md-input>
             </md-input-container>
             <md-input-container>
-                <label>What e-mail can we contact you on? (We will contact you from @zipperglobal.com-mails). This is important to be correct for us to follow up on your contribution.</label>
+                <label>Your e-mail (We will contact you from @zipperglobal.com-mails). This is important to be correct for us to follow up on your contribution.</label>
                 <md-input v-model="email" required></md-input>
             </md-input-container>
 
             <md-input-container>
-                <label>Please specify the country you're a resident of</label>
+                <label>Repeat your e-mail</label>
+                <md-input v-model="email2" required></md-input>
+            </md-input-container>
+
+            <md-input-container>
+                <label>Choose the country you're a resident of</label>
                 <md-select name="residentcountry" v-model="residentcountry">
                   <md-option v-for="(item, key) in $root.models.countries" v-bind:value="item.name">{{ item.name }}</md-option>
                 </md-select>
             </md-input-container>
             <md-input-container>
-                <label>Please specify the country you're a citizen of. If multiple, note this in additional comments.</label>
+                <label>Chose the country you're a citizen of. If multiple, note this in additional comments.</label>
                 <md-select name="citzencountry" v-model="citizencountry">
                   <md-option v-for="(item, key) in $root.models.countries" v-bind:value="item.name">{{ item.name }}</md-option>
                 </md-select>
            </md-input-container>
             <md-input-container>
-             	<label>Provide in this field any additional comments that help us process your contribution better</label>
+             	<label>Any additional comments that help us process your contribution better</label>
                 <md-textarea v-model="additional"></md-textarea>
             </md-input-container> 
 
@@ -65,11 +71,12 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
              <md-checkbox class="md-warn" v-model="costs">I accept that creating a Contribution Wallet will cost me approximately {{ $data.cwCost }} ETH in blockchain processing costs.</md-checkbox>
              <md-checkbox class="md-warn" v-model="mutual">I accept that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable by approval of the transaction by both yourself and Zipper Global Ltd.</md-checkbox>
              <md-checkbox class="md-warn" v-model="loss">I accept that if I lose access to my private key of the Ethereum address {{ $route.params.account }} I will be unable to access the contents of the Contribution Wallet and neither will Zipper Global Ltd.</md-checkbox>
-             <div v-if="this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.residentcountry.length > 0 && this.$data.citizencountry.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0">
-               <md-button class="md-raised md-primary" @click="createWallet()" >Submit my information to Zipper and create a Contribution Wallet</md-button><br> 
+
+             <div v-if="this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.resident && this.$data.residentcountry.length > 0 && this.$data.citizencountry.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0 && this.$data.email2.length > 0 && this.$data.email === this.$data.email2">
+               <md-button class="md-raised md-primary" @click="createWallet()">Submit my information to Zipper and create a Contribution Wallet</md-button><br> 
                Pressing this will likely pop-up a request from your Ethereum node or Browser plugin to accept and sign this transaction. Only click once; unless you've rejected the request in your Ethereum environment.
              </div>
-             <div v-if="!(this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.residentcountry.length > 0 && this.$data.citizencountry.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0)">
+             <div v-if="!(this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.resident && this.$data.residentcountry.length > 0 && this.$data.citizencountry.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0 && this.$data.email2.length > 0 && this.$data.email === this.$data.email2)">
                <md-button class="md-raised md-primary" disabled>Submit my information to Zipper and create a Contribution Wallet</md-button><br> 
              </div>
         </div>
@@ -95,7 +102,7 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
          <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.txtopup != null" style="border-color: black; border-style: solid">
                <img src="static/img/ajax-loader.gif"><br>
                Top-up transaction in progress, do not close this window<br><a v-bind:href="'https://etherscan.io/tx/' + $data.txtopup" target="_blank">View transaction {{ $data.txtopup }}</a><br><br>Please wait..
-               </div>
+         </div>
         
         <div v-if="$data.txhash != null" style="border: color: black; border-style: solid">
            <img src="static/img/ajax-loader.gif"><br>
@@ -104,46 +111,6 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
 
 
         </div>
-        <!--
-        <div v-if="$route.params.account != '' && $data.multisigs_found == null"> 
-            Querying if you have already started the contribution process with this address.
-        </div>
-        <div v-if="$route.params.account != '' && $data.txhash == null && $data.multisigs_found != null && $data.multisigs_found == false">
-            <br>
-            You have not started the contribution process with this address.
-            <md-input-container>
-                <label>What is your full name?</label>
-                <md-input v-model="fullname" required></md-input>
-            </md-input-container>
-            <md-input-container>
-                <label>What e-mail can we contact you on? (We will contact you from @zipperglobal.com-mails). This is important to be correct for us to follow up on your contribution.</label>
-                <md-input v-model="email" required></md-input>
-            </md-input-container>
-            <md-input-container>
-                <label>Please specify all the countries that you are resident of, citizen of or currently located in.</label>
-                <md-input v-model="countries" required></md-input>
-            </md-input-container>
-            <md-input-container>
-             	<label>Provide in this field any additional comments that help us process your contribution better</label>
-                <md-textarea v-model="additional"></md-textarea>
-            </md-input-container> 
-             <md-checkbox class="md-warn" v-model="resident">I confirm I'm not a resident of any of these countries: Afghanistan, Bosnia and Herzegovina, Central African Republic, China, Cuba, Democratic Republic of the Congo, Democratic People’s Republic of Korea, Eritrea, Ethiopia, Guinea-Bissau, Iran, Iraq, Libya, Lebanon, New Zealand, Somalia, South Sudan, Sudan, Syria, Sri Lanka, Tunisia, Vanuatu, and Yemen.</md-checkbox>
-             <md-checkbox class="md-warn" v-model="costs">I accept that creating a Contribution Wallet will cost me approximately {{ $data.cwCost }} ETH in blockchain processing costs.</md-checkbox>
-             <md-checkbox class="md-warn" v-model="mutual">I accept that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable by approval of the transaction by both yourself and Zipper Global Ltd.</md-checkbox>
-             <md-checkbox class="md-warn" v-model="loss">I accept that if I lose access to my private key of the Ethereum address {{ $route.params.account }} I will be unable to access the contents of the Contribution Wallet and neither will Zipper Global Ltd.</md-checkbox>
-             <div v-if="this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.terms && this.$data.countries.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0">
-               <md-button class="md-raised md-primary" @click="createWallet()" >Submit my information to Zipper and create a Contribution Wallet</md-button><br> 
-               Pressing this will likely pop-up a request from your Ethereum node or Browser plugin to accept and sign this transaction. Only click once; unless you've rejected the request in your Ethereum environment.
-             </div>
-             <div v-if="!(this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.terms && this.$data.countries.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0)">
-               <md-button class="md-raised md-primary" disabled>Submit my information to Zipper and create a Contribution Wallet</md-button><br> 
-             </div>
-        </div>
-        <div v-if="$data.txhash != null">
-           <br>
-           Contribution Wallet creation transaction is in progress. Transaction hash is <a v-bind:href="'https://etherscan.io/tx/' + $data.txhash" target="_blank">{{ $data.txhash }}</a>. It can take up to 2-5 minutes to confirm, depending on network conditions. Please wait... This page will update automatically.
-        </div>
-        -->
        </md-card-content>
       </md-card>
     </div>
@@ -166,6 +133,7 @@ export default {
     txCost: -1,
     fullname: '',
     email: '',
+    email2: '',
     residentcountry: '',
     citizencountry: '',
     additional: '',
