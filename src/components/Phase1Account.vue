@@ -216,7 +216,7 @@ export default {
     },
     createWallet: function () {
       var xmlhttp = new XMLHttpRequest()
-      var url = 'http://contribution.zipperglobal.com/submit'
+      var url = 'https://api.contribution.zipperglobal.com/submit'
       var obj = this
       xmlhttp.open('POST', url)
       xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
@@ -255,6 +255,7 @@ export default {
       })
       .on('confirmation', function (confirmationNumber, receipt) {
         obj.updateBalance()
+        obj.refreshMultisigBalance()
         obj.$router.push('/phase1-account/' + obj.$route.params.account + '/1')
       })
     },
