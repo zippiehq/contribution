@@ -9,7 +9,7 @@
 <br>
         <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0">
             <div v-for="(item, key) in $data.multisigs">
-               You now have a <a v-bind:href="'https://etherscan.io/address/' + item.address" target="_blank">Contribution Wallet</a> with {{ item.accountBalance }} ETH in it.<br>
+               You now have a <a v-bind:href="'https://etherscan.io/address/' + item.address" target="_blank">Contribution Wallet</a> with {{ item.accountBalance }} ETH in it.<br><br>
             </div>
         </div>             
 
@@ -21,7 +21,7 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
         </div>
         <div align=center v-if="$route.params.step == 0">
          <h1 v-if="$data.multisigs_found == null || $data.multisigs_found == false">Step 2/4</h1>
-         <h1 v-if="$data.multisigs_found != null || $data.multisigs_found == true">Step 3/4</h1>
+         <h1 v-if="$data.multisigs_found != null && $data.multisigs_found == true">Step 3/4</h1>
          Selected account: <b>{{ $route.params.account }}</b><br>
          <div v-if="$data.accountBalance >= 0">{{ $data.accountBalance }} ETH currently in this account.</div><br>
 
@@ -73,7 +73,7 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
                <md-button class="md-raised md-primary" disabled>Submit my information to Zipper and create a Contribution Wallet</md-button><br> 
              </div>
         </div>
-        <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0">
+        <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.txtopup == null">
             <div v-for="(item, key) in $data.multisigs">
                You now have a <a v-bind:href="'https://etherscan.io/address/' + item.address" target="_blank">Contribution Wallet</a> with {{ item.accountBalance }} ETH in it.<br>
                <br>
@@ -87,17 +87,17 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
 
                Remember that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable by approval of the transaction by both yourself and Zipper Global Ltd.
                Sending funds will incur a transaction cost of roughly {{ $data.txCost }} ETH and take 2-5 minutes to complete. <br>
-
-               <div v-if="$data.txtopup != null"><br><br>
-               <img src="static/img/ajax-loader.gif"><br>
-               Top-up transaction in progress<br>(Transaction hash: <a v-bind:href="'https://etherscan.io/tx/' + $data.txtopup" target="_blank">{{ $data.txtopup }}</a><br><br>Please wait..
-               </div>
+               <br><br>
                <md-button class="md-raised md-primary" @click="sendFunds(Number($data.topup[item.address]), item.address, $route.params.account)" v-if="$data.txtopup == null && $data.topup[item.address] != null && $data.topup[item.address] > 0">Send {{ Number($data.topup[item.address]) }} ETH to this Contribution Wallet</md-button>
             </div>
         </div>
-    
-        <div v-if="$data.txhash != null">
-           <br>
+
+         <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.txtopup != null" style="border-color: black; border-style: solid">
+               <img src="static/img/ajax-loader.gif"><br>
+               Top-up transaction in progress, do not close this window<br><a v-bind:href="'https://etherscan.io/tx/' + $data.txtopup" target="_blank">View transaction {{ $data.txtopup }}</a><br><br>Please wait..
+               </div>
+        
+        <div v-if="$data.txhash != null" style="border: color: black; border-style: solid">
            <img src="static/img/ajax-loader.gif"><br>
            Contribution Wallet creation transaction is in progress. Transaction hash is <a v-bind:href="'https://etherscan.io/tx/' + $data.txhash" target="_blank">{{ $data.txhash }}</a>. It can take up to 2-5 minutes to confirm, depending on network conditions. Please wait... This page will update automatically.
         </div>
@@ -186,6 +186,14 @@ export default {
         }, 2000)
       })
     },
+    refreshMultisigBalance: function () {
+      for (var i = 0; i < this.$data.multisigs.length; i++) {
+        var j = i
+        window.WEB3.eth.getBalance(this.$data.multisigs[i].address).then((result) => {
+          this.$data.multisigs[j].accountBalance = window.WEB3.utils.fromWei(result, 'ether')
+        })
+      }
+    },
     checkMultisigs: function () {
       if (this.$data.multisigfactory == null) {
         var multisigfactoryabi = JSON.parse('[{"constant":false,"inputs":[{"name":"_newZipper","type":"address"}],"name":"changeZipper","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"createMultisig","outputs":[{"name":"_multisig","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_zipper","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_multisig","type":"address"},{"indexed":true,"name":"_sender","type":"address"},{"indexed":true,"name":"_zipper","type":"address"}],"name":"MultisigCreated","type":"event"}]')
@@ -201,6 +209,9 @@ export default {
             this.$data.multisigs[j].accountBalance = window.WEB3.utils.fromWei(result, 'ether')
           })
         }
+        setTimeout(() => {
+          this.refreshMultisigBalance()
+        }, 2000)
       })
     },
     createWallet: function () {
@@ -227,6 +238,7 @@ export default {
       })
       .on('confirmation', function (confirmationNumber, receipt) {
         if (confirmationNumber === 5) {
+          obj.$data.txhash = null
           obj.checkMultisigs()
           obj.updateBalance()
         }
