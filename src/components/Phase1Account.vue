@@ -95,8 +95,16 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
 
                Remember that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable by approval of the transaction by both yourself and Zipper Global Ltd.
                Sending funds will incur a transaction cost of roughly {{ $data.txCost }} ETH and take 2-5 minutes to complete. <br>
+                  
                <br><br>
                <md-button class="md-raised md-primary" @click="sendFunds(Number($data.topup[item.address]), item.address, $route.params.account)" v-if="$data.txtopup == null && $data.topup[item.address] != null && $data.topup[item.address] > 0">Send {{ Number($data.topup[item.address]) }} ETH to this Contribution Wallet</md-button>
+
+               <md-button class="md-raised" @click="withdrawFunds(item.address, item.accountBalance, $route.params.account)" v-if="item.accountBalance > 0">Request to withdraw all funds from Contribution Wallet</md-button>
+               <br>
+               <div v-for="(item1, key1) in item.waitingMSig" v-if="item1.confirmed == false && item1.executed == false" style="border-style: solid;  border-color: black">
+                 Open request number {{ key1 }} to transfer {{ item1.eth }} ETH to {{ item1.destination == $route.params.account ? "your account" : item1.destination }}, waiting for confirmation by you. {{ item1.data == null ? "No associated data" : item1.data }}<br>
+                 <md-button class="md-raised" @click="confirmTx(item.contract, key1, $route.params.account)">Confirm</md-button>
+               </div>
             </div>
         </div>
 
@@ -162,17 +170,65 @@ export default {
         })
       }
     },
+    withdrawFunds: function (multisig, howmuch, fromaccount) {
+      var withdrawalrightabi = JSON.parse('[{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"_destination","type":"address"},{"name":"_value","type":"uint256"},{"name":"_data","type":"bytes"}],"name":"submitTransaction","outputs":[{"name":"transactionId","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newRealZipper","type":"address"}],"name":"changeRealZipper","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"transactionId","type":"uint256"}],"name":"revokeConfirmation","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"transactionId","type":"uint256"}],"name":"executeTransaction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"transactionId","type":"uint256"}],"name":"confirmTransaction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"_value","type":"uint256"}],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_realzipper","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}]')
+      var withdrawalright = new window.WEB3.eth.Contract(withdrawalrightabi, '0x428e6456fDEb6edc17e67E8e5A5678bf04c219Ee')
+      var obj = this
+      withdrawalright.methods.withdraw(multisig, window.WEB3.utils.toWei(howmuch, 'ether')).send({from: fromaccount, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 200000})
+      .on('transactionHash', function (hash) {
+        console.log('txhash ' + hash)
+      })
+      .on('confirmation', function (confirmationNumber, receipt) {
+        if (confirmationNumber === 5) {
+          obj.checkMultisigs()
+        }
+        console.log('confirmation ' + confirmationNumber + ' receipt ' + receipt)
+      })
+      .on('error', console.error)
+    },
+    confirmTx: function (multisigcontract, txid, fromaccount) {
+      var obj = this
+      multisigcontract.methods.confirmTransaction(txid.toString()).send({from: fromaccount, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 200000})
+     .on('transactionHash', function (hash) {
+       console.log('txhash ' + hash)
+     })
+     .on('confirmation', function (confirmationNumber, receipt) {
+       if (confirmationNumber === 5) {
+         obj.checkMultisigs()
+       }
+       console.log('confirmation ' + confirmationNumber + ' receipt ' + receipt)
+     })
+     .on('error', console.error)
+    },
     checkMultisigs: function () {
       if (this.$data.multisigfactory == null) {
         var multisigfactoryabi = JSON.parse('[{"constant":false,"inputs":[{"name":"_newZipper","type":"address"}],"name":"changeZipper","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"createMultisig","outputs":[{"name":"_multisig","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_zipper","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_multisig","type":"address"},{"indexed":true,"name":"_sender","type":"address"},{"indexed":true,"name":"_zipper","type":"address"}],"name":"MultisigCreated","type":"event"}]')
         this.$data.multisigfactory = new window.WEB3.eth.Contract(multisigfactoryabi, '0xe2E36080d4952ae9E90a9Bb87eC2C9a1e7781976')
       }
+      var multisigabi = JSON.parse('[{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"owners","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"owner","type":"address"}],"name":"removeOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"transactionId","type":"uint256"}],"name":"revokeConfirmation","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isOwner","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"},{"name":"","type":"address"}],"name":"confirmations","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"pending","type":"bool"},{"name":"executed","type":"bool"}],"name":"getTransactionCount","outputs":[{"name":"count","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"owner","type":"address"}],"name":"addOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"transactionId","type":"uint256"}],"name":"isConfirmed","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"transactionId","type":"uint256"}],"name":"getConfirmationCount","outputs":[{"name":"count","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"transactions","outputs":[{"name":"destination","type":"address"},{"name":"value","type":"uint256"},{"name":"data","type":"bytes"},{"name":"executed","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"getOwners","outputs":[{"name":"","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"from","type":"uint256"},{"name":"to","type":"uint256"},{"name":"pending","type":"bool"},{"name":"executed","type":"bool"}],"name":"getTransactionIds","outputs":[{"name":"_transactionIds","type":"uint256[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"transactionId","type":"uint256"}],"name":"getConfirmations","outputs":[{"name":"_confirmations","type":"address[]"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"transactionCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_required","type":"uint256"}],"name":"changeRequirement","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"transactionId","type":"uint256"}],"name":"confirmTransaction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"destination","type":"address"},{"name":"value","type":"uint256"},{"name":"data","type":"bytes"}],"name":"submitTransaction","outputs":[{"name":"transactionId","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"MAX_OWNER_COUNT","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"required","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"owner","type":"address"},{"name":"newOwner","type":"address"}],"name":"replaceOwner","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"transactionId","type":"uint256"}],"name":"executeTransaction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_owners","type":"address[]"},{"name":"_required","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"sender","type":"address"},{"indexed":true,"name":"transactionId","type":"uint256"}],"name":"Confirmation","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"sender","type":"address"},{"indexed":true,"name":"transactionId","type":"uint256"}],"name":"Revocation","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"transactionId","type":"uint256"}],"name":"Submission","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"transactionId","type":"uint256"}],"name":"Execution","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"transactionId","type":"uint256"}],"name":"ExecutionFailure","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"sender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Deposit","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"}],"name":"OwnerAddition","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"}],"name":"OwnerRemoval","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"required","type":"uint256"}],"name":"RequirementChange","type":"event"}]')
+      var obj = this
       this.$data.multisigs_found = null
+      this.$data.multisigs = []
       this.$data.multisigfactory.getPastEvents('MultisigCreated', {fromBlock: 0, filter: { _sender: this.$route.params.account }}).then((result) => {
         this.$data.multisigs_found = result.length > 0
         for (var i = 0; i < result.length; i++) {
-          this.$data.multisigs.push({address: result[i].returnValues._multisig, accountBalance: -1})
+          this.$data.multisigs.push({address: result[i].returnValues._multisig, accountBalance: -1, contract: new window.WEB3.eth.Contract(multisigabi, result[i].returnValues._multisig), waitingMSig: []})
           var j = i
+          this.$data.multisigs[j].contract.methods.transactionCount().call({ from: this.$route.account }).then(function (txCount) {
+            for (var k = 0; k < txCount; k++) {
+              var k1 = k
+              obj.$data.multisigs[j].contract.methods.transactions(k).call({ from: obj.$route.account }).then(function (txes) {
+                txes.confirmed = null
+                txes.eth = window.WEB3.utils.fromWei(txes.value, 'ether')
+                console.log(txes)
+                obj.$data.multisigs[j].waitingMSig.push(txes)
+                obj.$data.multisigs[j].contract.methods.confirmations(k, obj.$route.account).call({ from: obj.$route.account }).then(function (confirmed) {
+                  obj.$data.multisigs[j].waitingMSig[k1].confirmed = confirmed
+                  console.log(k1 + ' confirmed ' + confirmed)
+                })
+              })
+            }
+          })
           window.WEB3.eth.getBalance(this.$data.multisigs[i].address).then((result) => {
             this.$data.multisigs[j].accountBalance = window.WEB3.utils.fromWei(result, 'ether')
           })
