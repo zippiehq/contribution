@@ -102,8 +102,8 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
                <md-button class="md-raised" @click="withdrawFunds(item.address, item.accountBalance, $route.params.account)" v-if="item.accountBalance > 0">Request to withdraw all funds from Contribution Wallet</md-button>
                <br>
                <div v-for="(item1, key1) in item.waitingMSig" v-if="item1.confirmed == false && item1.executed == false" style="border-style: solid;  border-color: black">
-                 Open request number {{ key1 }} to transfer {{ item1.eth }} ETH to {{ item1.destination == $route.params.account ? "your account" : item1.destination }}, waiting for confirmation by you. {{ item1.data == null ? "No associated data" : item1.data }}<br>
-                 <md-button class="md-raised" @click="confirmTx(item.contract, key1, $route.params.account)">Confirm</md-button>
+                 Open request number {{ item1.transactionId }} to transfer {{ item1.eth }} ETH to {{ item1.destination == $route.params.account ? "your account" : item1.destination }}, waiting for confirmation by you. {{ item1.data == null ? "No associated data" : item1.data }}<br>
+                 <md-button class="md-raised" @click="confirmTx(item.contract, item1.transactionId, $route.params.account)">Confirm</md-button>
                </div>
             </div>
         </div>
@@ -220,6 +220,7 @@ export default {
               obj.$data.multisigs[j].contract.methods.transactions(k).call({ from: obj.$route.account }).then(function (txes) {
                 txes.confirmed = null
                 txes.eth = window.WEB3.utils.fromWei(txes.value, 'ether')
+                txes.transactionId = k1
                 console.log(txes)
                 obj.$data.multisigs[j].waitingMSig.push(txes)
                 obj.$data.multisigs[j].contract.methods.confirmations(k, obj.$route.account).call({ from: obj.$route.account }).then(function (confirmed) {

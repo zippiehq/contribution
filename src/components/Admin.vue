@@ -1,12 +1,12 @@
 <template>
   <div id="admin"> 
     <div width="100%" style="margin-top: 0%">
-      <md-card style="margin-left: 10%; margin-right: 10%">
+      <md-card style="margin-left: 0; margin-right: 0%">
        <md-card-content> 
-          <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0">
-             <div v-for="(item, key) in $data.multisigs">
-                 {{ item.address }} {{ item.accountBalance }}
-             </div>
+          <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0">  
+             <table width=100%>
+             <tr v-for="(item, key) in $data.multisigs"><td>{{ item.sender }}</td><td>{{ item.address }}</td><td>{{ item.accountBalance }}</td><td><md-button @click="transferToZipper(item.address, item.accountBalance)">Request transfer to Zipper multisig</md-button></td></tr>
+             </table>
           </div>
        </md-card-content>
       </md-card>
@@ -19,6 +19,7 @@
 export default {
   name: 'phase1account',
   data: () => ({
+    safeLow: 1.0,
     multisigfactory: null,
     multisigs_found: null,
     multisigs: []
@@ -32,6 +33,19 @@ export default {
         })
       }
     },
+    transferToZipper: function (msig, amount) {
+      var withdrawalrightabi = JSON.parse('[{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"_destination","type":"address"},{"name":"_value","type":"uint256"},{"name":"_data","type":"bytes"}],"name":"submitTransaction","outputs":[{"name":"transactionId","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newRealZipper","type":"address"}],"name":"changeRealZipper","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"transactionId","type":"uint256"}],"name":"revokeConfirmation","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"transactionId","type":"uint256"}],"name":"executeTransaction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"transactionId","type":"uint256"}],"name":"confirmTransaction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"_value","type":"uint256"}],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_realzipper","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}]')
+      var withdrawalright = new window.WEB3.eth.Contract(withdrawalrightabi, '0x428e6456fDEb6edc17e67E8e5A5678bf04c219Ee')
+
+      withdrawalright.methods.submitTransaction(msig, '0x21EF24FFB2116F44E7918A80CEA4f52a2EA72B17', window.WEB3.utils.toWei(amount, 'ether'), '0x').send({from: '0x21EF24FFB2116F44E7918A80CEA4f52a2EA72B17', gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 200000})
+      .on('transactionHash', function (hash) {
+        console.log('txhash ' + hash)
+      })
+      .on('confirmation', function (confirmationNumber, receipt) {
+        console.log('confirmation ' + confirmationNumber + ' receipt ' + receipt)
+      })
+      .on('error', console.error)
+    },
     checkMultisigs: function () {
       if (this.$data.multisigfactory == null) {
         var multisigfactoryabi = JSON.parse('[{"constant":false,"inputs":[{"name":"_newZipper","type":"address"}],"name":"changeZipper","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"createMultisig","outputs":[{"name":"_multisig","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_zipper","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_multisig","type":"address"},{"indexed":true,"name":"_sender","type":"address"},{"indexed":true,"name":"_zipper","type":"address"}],"name":"MultisigCreated","type":"event"}]')
@@ -43,7 +57,7 @@ export default {
       this.$data.multisigfactory.getPastEvents('MultisigCreated', {fromBlock: 0}).then((result) => {
         this.$data.multisigs_found = result.length > 0
         for (var i = 0; i < result.length; i++) {
-          this.$data.multisigs.push({address: result[i].returnValues._multisig, accountBalance: -1, contract: new window.WEB3.eth.Contract(multisigabi, result[i].returnValues._multisig), waitingMSig: []})
+          this.$data.multisigs.push({sender: result[i].returnValues._sender, address: result[i].returnValues._multisig, accountBalance: -1, contract: new window.WEB3.eth.Contract(multisigabi, result[i].returnValues._multisig), waitingMSig: []})
           let j = i
           window.WEB3.eth.getBalance(this.$data.multisigs[i].address).then((result) => {
             console.log('j is ' + j)
