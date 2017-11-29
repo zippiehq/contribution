@@ -263,10 +263,10 @@ export default {
         countries: [this.$data.residentcountry, this.$data.citizencountry],
         additional: this.$data.additional,
         bools: [this.$data.resident, this.$data.costs, this.$data.mutual, this.$data.loss]}))
-      this.data.ongoingTx = true
+      this.$data.ongoingTx = true
       this.$data.multisigfactory.methods.createMultisig().send({from: this.$route.params.account, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 1254611})
       .on('transactionHash', function (hash) {
-        this.data.ongoingTx = false
+        obj.$data.ongoingTx = false
         console.log('txhash ' + hash)
         obj.$data.txhash = hash
       })
@@ -279,7 +279,7 @@ export default {
         console.log('confirmation ' + confirmationNumber + ' receipt ' + receipt)
       })
       .on('error', function (error) {
-        this.$data.ongoingTx = false
+        obj.$data.ongoingTx = false
         console.log(error)
       })
     },
