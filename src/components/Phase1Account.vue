@@ -1,7 +1,7 @@
 <template>
   <div id="phase1"> 
     <div width="100%" style="margin-top: 0%">
-      <md-card>
+      <md-card style="margin-left: 10%; margin-right: 10%">
        <md-card-content> 
         <div align=center v-if="$route.params.step == 1">
         <h1>Step 4/4</h1>
@@ -27,7 +27,7 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
          <div v-if="$data.accountBalance > 0">{{ $data.accountBalance }} ETH currently in this account.</div><br>
          <div v-if="$data.accountBalance == 0">0 ETH currently in this account. You should top it up before being able to use the contribution process</div><br>
 
-         <md-button class="md-raised md-primary" @click="$router.push('/phase1')">Select another account</md-button><br><br>
+         <md-button class="md-raised" @click="$router.push('/phase1')">Select another account</md-button><br><br>
 
          <div v-if="$data.multisigs_found == null">
             <img src="static/img/ajax-loader.gif"><br>

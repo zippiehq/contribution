@@ -1,7 +1,7 @@
 <template>
   <div id="frontpage"> 
     <div width="100%" style="margin-top: 0%">
-      <md-card>
+      <md-card style="margin-left: 10%; margin-right: 10%">
        <md-card-content> 
         <div align=center>
         <h1>Welcome to the Zipper pre-sale contribution page</h1>
