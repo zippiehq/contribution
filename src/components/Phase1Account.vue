@@ -73,12 +73,15 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
              <md-checkbox class="md-warn" v-model="mutual">I accept that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable from it by approval of the transaction by both myself and Zipper Global Ltd.</md-checkbox>
              <md-checkbox class="md-warn" v-model="loss">I accept that if I lose access to my private key of the Ethereum address {{ $route.params.account }} I will be unable to access the contents of the Contribution Wallet and neither will Zipper Global Ltd.</md-checkbox>
 
-             <div v-if="this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.resident && this.$data.residentcountry.length > 0 && this.$data.citizencountry.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0 && this.$data.email2.length > 0 && this.$data.email === this.$data.email2">
+             <div v-if="this.$data.ongoingTx == false && this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.resident && this.$data.residentcountry.length > 0 && this.$data.citizencountry.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0 && this.$data.email2.length > 0 && this.$data.email === this.$data.email2">
                <md-button class="md-raised md-primary" @click="createWallet()">Submit my info &amp; create a Contribution Wallet</md-button><br> 
                Pressing this will likely pop-up a request from your Ethereum node or MetaMask extension to accept and sign this transaction. Only click once; unless you've rejected the request in your Ethereum environment.
              </div>
              <div v-if="!(this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.resident && this.$data.residentcountry.length > 0 && this.$data.citizencountry.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0 && this.$data.email2.length > 0 && this.$data.email === this.$data.email2)">
                <md-button class="md-raised md-primary" disabled>Submit my info &amp; create a Contribution Wallet</md-button><br> 
+             </div>
+             <div v-if="this.$data.ongoingTx == true">
+                <md-button class="md-raised md-primary" disabled>Requesting to sign transaction..</md-button><br>
              </div>
         </div>
         <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.txtopup == null">
@@ -260,9 +263,10 @@ export default {
         countries: [this.$data.residentcountry, this.$data.citizencountry],
         additional: this.$data.additional,
         bools: [this.$data.resident, this.$data.costs, this.$data.mutual, this.$data.loss]}))
-
+      this.data.ongoingTx = true
       this.$data.multisigfactory.methods.createMultisig().send({from: this.$route.params.account, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 1254611})
       .on('transactionHash', function (hash) {
+        this.data.ongoingTx = false
         console.log('txhash ' + hash)
         obj.$data.txhash = hash
       })
@@ -274,7 +278,10 @@ export default {
         }
         console.log('confirmation ' + confirmationNumber + ' receipt ' + receipt)
       })
-      .on('error', console.error)
+      .on('error', function (error) {
+        this.$data.ongoingTx = false
+        console.log(error)
+      })
     },
     sendFunds: function (amount, destination, origin) {
       var obj = this
