@@ -164,7 +164,7 @@ export default {
     },
     refreshMultisigBalance: function () {
       for (var i = 0; i < this.$data.multisigs.length; i++) {
-        var j = i
+        let j = i
         window.WEB3.eth.getBalance(this.$data.multisigs[i].address).then((result) => {
           this.$data.multisigs[j].accountBalance = window.WEB3.utils.fromWei(result, 'ether')
         })
@@ -213,10 +213,10 @@ export default {
         this.$data.multisigs_found = result.length > 0
         for (var i = 0; i < result.length; i++) {
           this.$data.multisigs.push({address: result[i].returnValues._multisig, accountBalance: -1, contract: new window.WEB3.eth.Contract(multisigabi, result[i].returnValues._multisig), waitingMSig: []})
-          var j = i
+          let j = i
           this.$data.multisigs[j].contract.methods.transactionCount().call({ from: this.$route.account }).then(function (txCount) {
             for (var k = 0; k < txCount; k++) {
-              var k1 = k
+              let k1 = k
               obj.$data.multisigs[j].contract.methods.transactions(k).call({ from: obj.$route.account }).then(function (txes) {
                 txes.confirmed = null
                 txes.eth = window.WEB3.utils.fromWei(txes.value, 'ether')
