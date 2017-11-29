@@ -6,12 +6,15 @@
         <div align=center>
         <h1>Welcome to the Zipper pre-sale contribution page</h1>
         
-        Thank you for your interest in Zipper project. We will guide you through a few steps so you are able to contribute to the project:<br>
+        Thank you for your interest in Zipper project.<br><br>
+        Please first read <a href="https://zipperglobal.com/presale/" target="_blank">our token pre-sale page before proceeding</a><br><br>
+        We will guide you through four steps so you are able to contribute to the project:<br>
          
         <h2>Phase 1</h2>
-        1. Select your Ethereum (ETH) account and create a personal Contribution Wallet<br>
-        2. Enter your personal info such as name and country of residence<br>
-        3. Transfer your desired contribution amount in ETH to your Contribution Wallet<br>
+        1. Select your Ethereum (ETH) account<br>
+        2. Enter your personal info such as name and country of residence and create a personal Contribution Wallet<br>
+        3. Transfer your desired contribution amount in ETH to your Contribution Wallet (minimum 0.5 ETH)<br>
+        4. Receive acknowledgement of transfer done.<br>
 
         <h2>Phase 2</h2>
         After completing phase 1, when we're ready, we will invite you via email to finalize your contribution: to submit your KYC documents and confirm your contribution transaction.<br><br>

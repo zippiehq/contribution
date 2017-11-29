@@ -13,7 +13,7 @@ Vue.use(VueMaterial)
 Vue.material.registerTheme('default', {
   primary: {
     color: 'cyan',
-    hue: 800
+    hue: 700
   },
   accent: {
     color: 'orange',
