@@ -75,7 +75,7 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
 
              <div v-if="this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.resident && this.$data.residentcountry.length > 0 && this.$data.citizencountry.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0 && this.$data.email2.length > 0 && this.$data.email === this.$data.email2">
                <md-button class="md-raised md-primary" @click="createWallet()">Submit my info &amp; create a Contribution Wallet</md-button><br> 
-               Pressing this will likely pop-up a request from your Ethereum node or Browser plugin to accept and sign this transaction. Only click once; unless you've rejected the request in your Ethereum environment.
+               Pressing this will likely pop-up a request from your Ethereum node or MetaMask extension to accept and sign this transaction. Only click once; unless you've rejected the request in your Ethereum environment.
              </div>
              <div v-if="!(this.$data.resident && this.$data.costs && this.$data.mutual && this.$data.loss && this.$data.resident && this.$data.residentcountry.length > 0 && this.$data.citizencountry.length > 0 && this.$data.email.length > 0 && this.$data.fullname.length > 0 && this.$data.email2.length > 0 && this.$data.email === this.$data.email2)">
                <md-button class="md-raised md-primary" disabled>Submit my info &amp; create a Contribution Wallet</md-button><br> 
@@ -90,15 +90,19 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
                               
                <md-input-container>
                   <label>Please enter amount of ETH to send to this Contribution Wallet</label>
-                  <md-input v-model="topup[item.address]" required></md-input>
+                  <md-input v-model="topup[item.address]" required v-if="$data.ongoingTx == false"></md-input>
+                  <md-input v-model="topup[item.address]" disabled v-if="$data.ongoingTx == true"></md-input>
                </md-input-container>
 
                Remember that any Ether or other blockchain rights (such as tokens) sent to or stored within the Contribution Wallet is only transferable by approval of the transaction by both yourself and Zipper Global Ltd.
                Sending funds will incur a transaction cost of roughly {{ $data.txCost }} ETH and take 2-5 minutes to complete. <br>
                   
                <br><br>
-               <md-button class="md-raised md-primary" @click="sendFunds(Number($data.topup[item.address]), item.address, $route.params.account)" v-if="$data.txtopup == null && $data.topup[item.address] != null && $data.topup[item.address] > 0">Send {{ Number($data.topup[item.address]) }} ETH to this Contribution Wallet</md-button>
-
+               <div v-if="$data.txtopup == null && $data.ongoingTx == false && $data.topup[item.address] != null && $data.topup[item.address] > 0">
+               <md-button class="md-raised md-primary" @click="sendFunds(Number($data.topup[item.address]), item.address, $route.params.account)" v-if>Send {{ Number($data.topup[item.address]) }} ETH to this Contribution Wallet</md-button><br>
+               Pressing this will likely pop-up a request from your Ethereum node or MetaMask extension to accept and sign this transaction. Only click once; unless you've rejected the request in your Ethereum environment.               
+               </div>
+               <md-button class="md-raised md-primary" disabled v-if="$data.ongoingTx == true">Requesting to sign transaction..</md-button>
                <md-button class="md-raised" @click="withdrawFunds(item.address, item.accountBalance, $route.params.account)" v-if="item.accountBalance > 0">Request to withdraw all funds from Contribution Wallet</md-button>
                <br>
                <div v-for="(item1, key1) in item.waitingMSig" v-if="item1.confirmed == false && item1.executed == false" style="border-style: solid;  border-color: black">
@@ -149,6 +153,7 @@ export default {
     costs: false,
     mutual: false,
     loss: false,
+    ongoingTx: false,
     txhash: null,
     topup: {},
     txtopup: null
@@ -273,8 +278,10 @@ export default {
     },
     sendFunds: function (amount, destination, origin) {
       var obj = this
+      this.$data.ongoingTx = true
       window.WEB3.eth.sendTransaction({from: origin, to: destination, value: window.WEB3.utils.toWei(amount.toString(), 'ether'), gas: 100000, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei')})
       .on('transactionHash', function (hash) {
+        obj.$data.ongoingTx = false
         console.log('sendFunds tx ' + hash)
         obj.$data.txtopup = hash
       })
@@ -282,6 +289,10 @@ export default {
         obj.updateBalance()
         obj.refreshMultisigBalance()
         obj.$router.push('/phase1-account/' + obj.$route.params.account + '/1')
+      })
+      .on('error', function (error) {
+        obj.$data.ongoingTx = false
+        console.log(error)
       })
     },
     goToZipper: function () {
