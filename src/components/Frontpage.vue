@@ -5,8 +5,12 @@
        <md-card-content> 
         <div align=center>
         <h1>Welcome to the Zipper pre-sale contribution page</h1>
-        
+
         Thank you for your interest in Zipper project.<br><br>
+
+        This page is using 'http' as to make it possible for the contribution page to connect to a local Ethereum node, if needed, due to Mixed Content browser rules.<br>
+        All personal information sent to Zipper is done with 'https'.<br>
+        <br>
         Please first read <a href="https://zipperglobal.com/presale/" target="_blank">our token pre-sale page before proceeding</a><br><br>
         We will guide you through four steps so you are able to contribute to the project:<br>
          
@@ -22,7 +26,7 @@
         <i>Note: You can cancel your contribution through this site anytime before completing Phase 2. Your Contribution Wallet is an account that requires two parties, you and Zipper Global Ltd., to agree in order to transfer anything from it (you can see the account’s <a href="https://etherscan.io/address/0xe2e36080d4952ae9e90a9bb87ec2c9a1e7781976#code">smart contract code here</a>). Until your contribution is fully processed in Phase 2, no offer, sale, or any form of transaction between you and Zipper Global Ltd. has been entered into.</i><br>
 
         <md-checkbox class="md-warn" v-model="terms"></md-checkbox>I have read and agree to the <a href="https://zipperglobal.com/contribution-terms-conditions/" target="_blank">Zipper Contribution Terms &amp; Conditions</a> and understand the risks mentioned therein<br>
-      
+       
         <md-button v-if="$data.terms" class="md-raised md-primary" @click="$router.push('/phase1')">Start phase 1</md-button>
         <md-button v-if="!$data.terms" class="md-raised md-primary" disabled>Start phase 1</md-button>
         <br>
@@ -31,7 +35,7 @@
        </md-card-content>
       </md-card>
     </div>
-    <div align=right>v1.0.4</div>
+    <div align=right>v1.0.5</div>
   </div>
 </template>
 
