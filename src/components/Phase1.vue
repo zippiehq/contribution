@@ -5,9 +5,9 @@
        <md-card-content> 
         <div align=center>
          <h1>Step 1/4</h1>
-         <div v-if="$root.models.accounts == null">Unable to connect to an Ethereum node, or we're still connecting. Please install an Ethereum client such as <a href="https://parity.io">Parity</a> or if you use Chrome browser, <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn">the MetaMask browser extension</a> and <a href="/">reload this page</a></div>
+         <div v-if="$root.models.accounts == null">Unable to connect to an Ethereum node, or we're still connecting. Please install an Ethereum client such as <a href="https://parity.io" target="_blank">Parity</a> or if you use Chrome browser, <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn" target="_blank">the MetaMask browser extension</a> and <a href="/">reload this page</a></div>
 
-         <div v-if="$root.models.accounts != null && $root.models.accounts.length == 0" style="background: pink">Unable to locate any Ethereum accounts.<br><br>If you're using MetaMask, please unlock your MetaMask account by clicking the MetaMask icon in your browser..<br>This error may also disappear in a few seconds if your Ethereum node responds.<br><br><a href="/#contact">Contact us</a> if you have any problems.</div>
+         <div v-if="$root.models.accounts != null && $root.models.accounts.length == 0" style="background: pink">Unable to locate any Ethereum accounts.<br><br>If you're using MetaMask, please unlock your MetaMask account by clicking the MetaMask icon in your browser..<br>This error may also disappear in a few seconds if your Ethereum node responds.<br><br><a href="https://zipperglobal.com/contact/" target="_blank">Contact us</a> if you have any problems.</div>
 
          <div v-if="$root.models.accounts != null && $root.models.accounts.length > 0">
            <md-input-container>

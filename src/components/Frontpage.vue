@@ -21,7 +21,7 @@
         
         <i>Note: You can cancel your contribution through this site anytime before completing Phase 2. Your Contribution Wallet is an account that requires two parties, you and Zipper Global Ltd., to agree in order to transfer anything from it (you can see the account’s <a href="https://etherscan.io/address/0xe2e36080d4952ae9e90a9bb87ec2c9a1e7781976#code">smart contract code here</a>). Until your contribution is fully processed in Phase 2, no offer, sale, or any form of transaction between you and Zipper Global Ltd. has been entered into.</i><br>
 
-        <md-checkbox class="md-warn" v-model="terms">I agree to the <a href="/#terms" target="_blank">Zipper Contribution Terms &amp; Conditions</a></md-checkbox><br>
+        <md-checkbox class="md-warn" v-model="terms">I have read and agree to the <a href="https://zipperglobal.com/contribution-terms-conditions/" target="_blank">Zipper Contribution Terms &amp; Conditions</a> and understand the risks mentioned therein</md-checkbox><br>
       
         <md-button v-if="$data.terms" class="md-raised md-primary" @click="$router.push('/phase1')">Start phase 1</md-button>
         <md-button v-if="!$data.terms" class="md-raised md-primary" disabled>Start phase 1</md-button>
