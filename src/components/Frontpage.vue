@@ -17,7 +17,7 @@
         <h2>Phase 1</h2>
         1. Select your Ethereum (ETH) account<br>
         2. Enter your personal info such as name and country of residence and create a personal Contribution Wallet<br>
-        3. Transfer your desired contribution amount in ETH to your Contribution Wallet (note minimum participation 0.545 ETH = 250 USD)<br>
+        3. Transfer your desired contribution amount in ETH to your Contribution Wallet (note minimum participation 0.262 ETH = 120 USD)<br>
         4. Receive acknowledgement of transfer done.<br>
 
         <h2>Phase 2</h2>
@@ -35,7 +35,7 @@
        </md-card-content>
       </md-card>
     </div>
-    <div align=right>v1.0.6</div>
+    <div align=right>v1.0.7</div>
   </div>
 </template>
 

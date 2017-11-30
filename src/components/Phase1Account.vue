@@ -86,10 +86,10 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
         </div>
         <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.txtopup == null">
             <div v-for="(item, key) in $data.multisigs">
-               You now have a <a v-bind:href="'https://etherscan.io/address/' + item.address" target="_blank">Contribution Wallet</a> with {{ item.accountBalance }} ETH in it <div v-if="Number(item.accountBalance) < 0.545">(should be topped up to at least 0.545 ETH)</div><br> 
+               You now have a <a v-bind:href="'https://etherscan.io/address/' + item.address" target="_blank">Contribution Wallet</a> with {{ item.accountBalance }} ETH in it <div v-if="Number(item.accountBalance) < 0.262">(should be topped up to at least 0.262 ETH)</div><br> 
                <br>
                <b>Next, transfer funds from your ETH wallet to your Contribution Wallet.</b><br>
-               Participation in 'small' cap: minimum 0.545 ETH (250 USD) to 21.802 ETH (10000 USD)<br>
+               Participation in 'small' cap: minimum 0.262 ETH (120 USD) to 21.802 ETH (10000 USD)<br>
                Participation in 'large' cap: minimum 21.802 ETH (1000 USD) to 1090.108 ETH (500000 USD)<br>
                1 ETH = 15289 ZIP tokens<br>
                               
