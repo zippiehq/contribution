@@ -62,11 +62,11 @@ export default {
       this.$data.multisigTotal = Number(0.0)
       this.$data.multisigfactory.getPastEvents('MultisigCreated', {fromBlock: 0}).then((result) => {
         this.$data.multisigs_found = result.length > 0
+        console.log(result)
         for (var i = 0; i < result.length; i++) {
           this.$data.multisigs.push({sender: result[i].returnValues._sender, address: result[i].returnValues._multisig, accountBalance: -1, contract: new window.WEB3.eth.Contract(multisigabi, result[i].returnValues._multisig), waitingMSig: []})
           let j = i
           window.WEB3.eth.getBalance(this.$data.multisigs[i].address).then((result) => {
-            console.log('j is ' + j)
             this.$data.multisigs[j].accountBalance = window.WEB3.utils.fromWei(result, 'ether')
             this.$data.multisigTotal += Number(this.$data.multisigs[j].accountBalance)
           })
