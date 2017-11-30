@@ -91,7 +91,7 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
                <b>Next, transfer funds from your ETH wallet to your Contribution Wallet.</b><br>
                Participation in 'small' cap: minimum 0.545 ETH (250 USD) to 21.802 ETH (10000 USD)<br>
                Participation in 'large' cap: minimum 21.802 ETH (1000 USD) to 1090.108 ETH (500000 USD)<br>
-
+               1 ETH = 15289 ZIP tokens<br>
                               
                <md-input-container>
                   <label>Please enter amount of ETH to send to this Contribution Wallet</label>
