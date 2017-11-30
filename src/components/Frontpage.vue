@@ -4,7 +4,7 @@
       <md-card style="margin-left: 10%; margin-right: 10%">
        <md-card-content> 
         <div align=center>
-        <h1>Welcome to the Zipper pre-sale contribution page (v1.0.2)</h1>
+        <h1>Welcome to the Zipper pre-sale contribution page</h1>
         
         Thank you for your interest in Zipper project.<br><br>
         Please first read <a href="https://zipperglobal.com/presale/" target="_blank">our token pre-sale page before proceeding</a><br><br>
@@ -26,12 +26,12 @@
         <md-button v-if="$data.terms" class="md-raised md-primary" @click="$router.push('/phase1')">Start phase 1</md-button>
         <md-button v-if="!$data.terms" class="md-raised md-primary" disabled>Start phase 1</md-button>
         <br>
-        
         </div>
 
        </md-card-content>
       </md-card>
     </div>
+    <div align=right>v1.0.3</div>
   </div>
 </template>
 
