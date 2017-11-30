@@ -58,7 +58,7 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
                 </md-select>
             </md-input-container>
             <md-input-container>
-                <label>Chose the country you're a citizen of. If multiple, note this in additional comments.</label>
+                <label>Choose the country you're a citizen of. If multiple, note this in additional comments.</label>
                 <md-select name="citzencountry" v-model="citizencountry">
                   <md-option v-for="(item, key) in $root.models.countries" v-bind:value="item.name">{{ item.name }}</md-option>
                 </md-select>

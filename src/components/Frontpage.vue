@@ -4,7 +4,7 @@
       <md-card style="margin-left: 10%; margin-right: 10%">
        <md-card-content> 
         <div align=center>
-        <h1>Welcome to the Zipper pre-sale contribution page (v1.0.1)</h1>
+        <h1>Welcome to the Zipper pre-sale contribution page (v1.0.2)</h1>
         
         Thank you for your interest in Zipper project.<br><br>
         Please first read <a href="https://zipperglobal.com/presale/" target="_blank">our token pre-sale page before proceeding</a><br><br>
