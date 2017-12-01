@@ -89,7 +89,7 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
                You now have a <a v-bind:href="'https://etherscan.io/address/' + item.address" target="_blank">Contribution Wallet</a> with {{ item.accountBalance }} ETH in it <div v-if="Number(item.accountBalance) < 0.262">(should be topped up to at least 0.262 ETH)</div><br> 
                <b>Next, transfer funds from your ETH wallet to your Contribution Wallet.</b><br>
                Participation in 'small' cap: minimum 0.262 ETH (120 USD) to 21.802 ETH (10000 USD)<br>
-               Participation in 'large' cap: minimum 21.802 ETH (1000 USD) to 1090.108 ETH (500000 USD)<br>
+               Participation in 'large' cap: minimum 21.802 ETH (10000 USD) to 1090.108 ETH (500000 USD)<br>
                1 ETH = 15289 ZIP tokens<br>
               <b>If you have already sent your contribution, you don't need to do anything else, we'll contact you when ready</b><br>
                               
