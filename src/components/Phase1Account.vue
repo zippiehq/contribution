@@ -24,8 +24,8 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
          <h1 v-if="$data.multisigs_found == null || $data.multisigs_found == false">Step 2/4</h1>
          <h1 v-if="$data.multisigs_found != null && $data.multisigs_found == true">Step 3/4</h1>
          Selected account: <b>{{ $route.params.account }}</b><br>
-         <div v-if="$data.accountBalance > 0">{{ $data.accountBalance }} ETH currently in this account.</div><br>
-         <div v-if="$data.accountBalance == 0">0 ETH currently in this account. You should top it up before being able to use the contribution process</div><br>
+         <div v-if="$data.accountBalance > 0">{{ $data.accountBalance }} ETH currently in this account.</div>
+         <div v-if="$data.accountBalance == 0">0 ETH currently in this account. You should top it up before being able to use the contribution process</div>
 
          <md-button class="md-raised" @click="$router.push('/phase1')">Select another account</md-button><br><br>
 
@@ -87,11 +87,11 @@ If you want to transfer more funds to your Contribution Wallet, you can start th
         <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.txtopup == null">
             <div v-for="(item, key) in $data.multisigs">
                You now have a <a v-bind:href="'https://etherscan.io/address/' + item.address" target="_blank">Contribution Wallet</a> with {{ item.accountBalance }} ETH in it <div v-if="Number(item.accountBalance) < 0.262">(should be topped up to at least 0.262 ETH)</div><br> 
-               <br>
                <b>Next, transfer funds from your ETH wallet to your Contribution Wallet.</b><br>
                Participation in 'small' cap: minimum 0.262 ETH (120 USD) to 21.802 ETH (10000 USD)<br>
                Participation in 'large' cap: minimum 21.802 ETH (1000 USD) to 1090.108 ETH (500000 USD)<br>
                1 ETH = 15289 ZIP tokens<br>
+              <b>If you have already sent your contribution, you don't need to do anything else, we'll contact you when ready</b><br>
                               
                <md-input-container>
                   <label>Please enter amount of ETH to send to this Contribution Wallet</label>
