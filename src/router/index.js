@@ -4,6 +4,8 @@ import Frontpage from '@/components/Frontpage'
 import Phase1 from '@/components/Phase1'
 import Phase1Account from '@/components/Phase1Account'
 import Admin from '@/components/Admin'
+import Waiver from '@/components/Waiver'
+import WaiverAccount from '@/components/WaiverAccount'
 
 Vue.use(Router)
 
@@ -28,6 +30,16 @@ export default new Router({
       path: '/phase1-account/:account/:step',
       name: 'Phase1Account',
       component: Phase1Account
+    },
+    {
+      path: '/waiver',
+      name: 'Waiver',
+      component: Waiver
+    },
+    {
+      path: '/waiver-account/:account',
+      name: 'WaiverAccount',
+      component: WaiverAccount
     }
   ]
 })

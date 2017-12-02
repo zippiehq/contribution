@@ -7,9 +7,14 @@
         <h1>Welcome to the Zipper pre-sale contribution page</h1>
 
         Thank you for your interest in Zipper project.<br><br>
-
+        <div v-if="$data.protocol == 'http:'">
         This page is using 'http' as to make it possible for the contribution page to connect to a local Ethereum node, if needed, due to Mixed Content browser rules.<br>
-        All personal information sent to Zipper is done with 'https'.<br>
+        All personal information sent to Zipper is done with 'https'. <a href="https://contribution.zipperglobal.com">You can switch to https if you use the MetaMask browser extension</a><br>
+        </div>
+        <div v-if="$data.protocol == 'https:'">
+        This page is using 'https'. You can only use this page with the MetaMask browser extension. If you need to use a local Ethereum node, <a href="http://contribution.zipperglobal.com">switch to http</a>
+        </div>
+
         <br>
         Please first read <a href="https://zipperglobal.com/presale/" target="_blank">our token pre-sale page before proceeding</a><br><br>
         We will guide you through four steps so you are able to contribute to the project:<br>
@@ -35,7 +40,7 @@
        </md-card-content>
       </md-card>
     </div>
-    <div align=right>v1.0.9</div>
+    <div align=right>v1.1.0</div>
   </div>
 </template>
 
@@ -44,7 +49,8 @@
 export default {
   name: 'frontpage',
   data: () => ({
-    terms: false
+    terms: false,
+    protocol: location.protocol
   })
 }
 </script>
