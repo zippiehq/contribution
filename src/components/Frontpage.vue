@@ -12,7 +12,7 @@
         All personal information sent to Zipper is done with 'https'. <a href="https://contribution.zipperglobal.com">You can switch to https if you use the MetaMask browser extension</a><br>
         </div>
         <div v-if="$data.protocol == 'https:'">
-        This page is using 'https'. You can only use this page with the MetaMask browser extension. If you need to use a local Ethereum node, <a href="http://contribution.zipperglobal.com">switch to http</a>
+        This page is using 'https'. You can only use this page with the MetaMask browser extension.<br>If you need to use a local Ethereum node, <a href="http://contribution.zipperglobal.com">switch to http</a>
         </div>
 
         <br>
