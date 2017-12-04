@@ -55,7 +55,7 @@
          </div>
          <div v-if="$route.params.step == 1" align=center>
          <h1>Step 2/3</h1>
-         Next, please confirm your contribution amount.<br><br>By confirming, you permit Zipper to transfer the full contribution amount into its <a href="https://etherscan.io/address/0x21EF24FFB2116F44E7918A80CEA4f52a2EA72B17" target="_blank">Ethereum accounts</a> and you will no longer be able to withdraw it.<br><br>
+         Next, please confirm your contribution.<br><br>By confirming, you permit Zipper to transfer the full contribution amount into its <a href="https://etherscan.io/address/0x21EF24FFB2116F44E7918A80CEA4f52a2EA72B17" target="_blank">Ethereum accounts</a> and you will no longer be able to withdraw it.<br><br>
                  
          <div v-if="$data.multisigs_found == null">
             <img src="static/img/ajax-loader.gif"><br>
