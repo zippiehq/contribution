@@ -55,7 +55,7 @@
          </div>
          <div v-if="$route.params.step == 1" align=center>
          <h1>Step 2/3</h1>
-         Next, please confirm your contribution.<br><br>By confirming, you permit Zipper to transfer the full contribution amount into its <a href="https://etherscan.io/address/0x21EF24FFB2116F44E7918A80CEA4f52a2EA72B17" target="_blank">Ethereum accounts</a> and you will no longer be able to withdraw it.<br><br>
+         Next, please confirm your contribution.<br><br>By confirming, you permit Zipper to transfer the full contribution amount in your contribution wallet into its <a href="https://etherscan.io/address/0x21EF24FFB2116F44E7918A80CEA4f52a2EA72B17" target="_blank">Ethereum accounts</a> and you will no longer be able to withdraw it.<br><br>
                  
          <div v-if="$data.multisigs_found == null">
             <img src="static/img/ajax-loader.gif"><br>
@@ -64,7 +64,7 @@
          
          <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.tx.length == 0">
             <div v-for="(item, key) in $data.multisigs">
-                Balance of your <a v-bind:href="'https://etherscan.io/address/' + item.address" target="_blank">Contribution Wallet</a>: {{ item.accountBalance }} ETH<br><br>
+                Current balance in your <a v-bind:href="'https://etherscan.io/address/' + item.address" target="_blank">Contribution Wallet</a>: <b>{{ item.accountBalance }} ETH</b><br><br>
                 
                 Permitting Zipper to transfer will incur a transaction cost of roughly {{ $data.txCost }} ETH and take 2-5 minutes to complete.<br>Current balance of your Ethereum account: {{ $data.accountBalance }} ETH<br><br>
                 <md-button v-if="$data.ongoingTx == false" class="md-raised md-primary" @click="allowTx(item.contract, item.accountBalance)">Permit Zipper to transfer {{ item.accountBalance }} ETH from my contribution wallet</md-button><br>
