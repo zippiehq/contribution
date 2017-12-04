@@ -8,7 +8,7 @@
          <h1>Welcome back to finalize your Zipper pre-sale contribution</h1>
 
         <div v-if="$data.protocol == 'https:'">
-         This site only works with MetaMask. If you use a local Ethereum node, please switch to <a href="http://contribution.zipperglobal.com/">http</a>.<br>
+         This site only works with MetaMask. If you use a local Ethereum node, please switch to <a href="http://contribution.zipperglobal.com/#/kyc">http</a>.<br>
         </div>
 
          To finalize your contribution to the Zipper project, please proceed with the last two steps:<br><br>
