@@ -6,6 +6,8 @@ import Phase1Account from '@/components/Phase1Account'
 import Admin from '@/components/Admin'
 import Waiver from '@/components/Waiver'
 import WaiverAccount from '@/components/WaiverAccount'
+import Kyc from '@/components/Kyc'
+import KycAccount from '@/components/KycAccount'
 
 Vue.use(Router)
 
@@ -40,6 +42,16 @@ export default new Router({
       path: '/waiver-account/:account',
       name: 'WaiverAccount',
       component: WaiverAccount
+    },
+    {
+      path: '/kyc',
+      name: 'Kyc',
+      component: Kyc
+    },
+    {
+      path: '/kyc-account/:account/:step',
+      name: 'KycAccount',
+      component: KycAccount
     }
   ]
 })

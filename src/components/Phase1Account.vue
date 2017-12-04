@@ -144,7 +144,7 @@ export default {
     multisigfactory: null,
     multisigs: [],
     multisigs_found: null,
-    safeLow: 2.0,
+    safeLow: 4.0,
     safeLowWait: 1.8,
     cwCost: -1,
     txCost: -1,
