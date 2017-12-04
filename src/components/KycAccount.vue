@@ -64,7 +64,7 @@
          
          <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.tx.length == 0">
             <div v-for="(item, key) in $data.multisigs">
-                Current balance in your <a v-bind:href="'https://etherscan.io/address/' + item.address" target="_blank">Contribution Wallet</a>: <b>{{ item.accountBalance }} ETH</b><br><br>
+                Your contribution amount: <b>{{ item.accountBalance }} ETH</b><br><br>
                 
                 Permitting Zipper to transfer will incur a transaction cost of roughly {{ $data.txCost }} ETH and take 2-5 minutes to complete.<br>Current balance of your Ethereum account: {{ $data.accountBalance }} ETH<br><br>
                 <md-button v-if="$data.ongoingTx == false" class="md-raised md-primary" @click="allowTx(item.contract, item.accountBalance)">Permit Zipper to transfer {{ item.accountBalance }} ETH from my contribution wallet</md-button><br>
