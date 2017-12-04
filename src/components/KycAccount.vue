@@ -50,8 +50,9 @@
              <md-file v-model="selfie" @selected="setFile($event, 'selfie_data')" />
             </md-input-container>
             <md-checkbox v-model="kycaccept"></md-checkbox>I accept that Zipper may use and retain this information for processing my contribution for regulatory purposes<br>
-            <md-button v-if="this.$data.kycaccept && this.$data.address.length > 0 & this.$data.postal.length > 0 && this.$data.city.length > 0 && this.$data.country.length > 0 && this.$data.selfie_data.length > 0 && this.$data.idscan_data.length > 0" class="md-primary md-raised" @click="submit">Submit my identifying information and go to next step</md-button>
-            <md-button disabled v-if="!(this.$data.kycaccept && this.$data.address.length > 0 & this.$data.postal.length > 0 && this.$data.city.length > 0 && this.$data.country.length > 0 && this.$data.selfie_data.length > 0 && this.$data.idscan_data.length > 0)" class="md-primary md-raised" @click="submit">Submit my identifying information and go to next step</md-button>
+            <md-button v-if="this.$data.kycaccept && this.$data.address.length > 0 & this.$data.postal.length > 0 && this.$data.city.length > 0 && this.$data.country.length > 0 && this.$data.selfie_data.length > 0 && this.$data.idscan_data.length > 0 && this.$data.ongoingTx == false" class="md-primary md-raised" @click="submit">Submit my identifying information and go to next step</md-button>
+            <md-button disabled v-if="!(this.$data.kycaccept && this.$data.address.length > 0 & this.$data.postal.length > 0 && this.$data.city.length > 0 && this.$data.country.length > 0 && this.$data.selfie_data.length > 0 && this.$data.idscan_data.length > 0) && this.$data.ongoingTx == false" class="md-primary md-raised" @click="submit">Submit my identifying information and go to next step</md-button>
+            <md-button disabled v-if="this.$data.ongoingTx == true" class="md-primary md-raised" @click="submit">Uploading data..</md-button>
          </div>
          <div v-if="$route.params.step == 1" align=center>
          <h1>Step 2/3</h1>
@@ -164,10 +165,12 @@ export default {
       var xmlhttp = new XMLHttpRequest()
       var url = 'https://api.contribution.zipperglobal.com/submit/kyc'
       let obj = this
+      this.$data.ongoingTx = true
       xmlhttp.open('POST', url)
       xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
       xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+          obj.$data.ongoingTx = false
           obj.$router.push('/kyc-account/' + obj.$route.params.account + '/1')
         }
       }

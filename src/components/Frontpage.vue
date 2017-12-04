@@ -40,7 +40,7 @@
        </md-card-content>
       </md-card>
     </div>
-    <div align=right>v1.2.4</div>
+    <div align=right>v1.2.5</div>
   </div>
 </template>
 
