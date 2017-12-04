@@ -62,15 +62,20 @@
             Locating your contribution wallet..
          </div>
          
-         <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0">
+         <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.tx.length == 0">
             <div v-for="(item, key) in $data.multisigs">
                 Balance of your <a v-bind:href="'https://etherscan.io/address/' + item.address" target="_blank">Contribution Wallet</a>: {{ item.accountBalance }} ETH<br><br>
                 
-                Allowing Zipper to transfer will incur a transaction cost of roughly {{ $data.txCost }} ETH and take 2-5 minutes to complete.<br>Current balance of your Ethereum account: {{ $data.accountBalance }} ETH<br><br>
-                <md-button v-if="$data.ongoingTx == false" class="md-raised md-primary" @click="allowTx(item.contract, item.accountBalance)">Allow Zipper to transfer {{ item.accountBalance }} ETH from my contribution wallet to itself</md-button><br>
+                Permitting Zipper to transfer will incur a transaction cost of roughly {{ $data.txCost }} ETH and take 2-5 minutes to complete.<br>Current balance of your Ethereum account: {{ $data.accountBalance }} ETH<br><br>
+                <md-button v-if="$data.ongoingTx == false" class="md-raised md-primary" @click="allowTx(item.contract, item.accountBalance)">Permit Zipper to transfer {{ item.accountBalance }} ETH from my contribution wallet</md-button><br>
                 <md-button v-if="$data.ongoingTx == true" class="md-raised md-primary">Requesting to sign transaction..</md-button><br>
                 Pressing this will likely pop-up a request from your Ethereum node or MetaMask extension to accept and sign this transaction. 
            </div>
+         </div>
+
+         <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.tx.length > 0" style="border-color: black; border-style: solid">
+               <img src="static/img/ajax-loader.gif"><br>
+               Permit transaction in progress, do not close this window<br><a v-bind:href="'https://etherscan.io/tx/' + $data.tx" target="_blank">View transaction</a><br><br>You do not need to wait for this transaction; it may be quite slow due to Ethereum network conditions. We'll contact you with confirmation eventually.<br>
          </div>
 
          </div>
@@ -100,7 +105,7 @@ export default {
     multisigs_found: null,
     ongoingTx: false,
     txCost: false,
-    tx: null,
+    tx: '',
     accountBalance: -1
   }),
   methods: {

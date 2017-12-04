@@ -5,9 +5,12 @@
        <md-card-content> 
           <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0">  
              Total so far: {{ $data.multisigTotal }} ETH
-
+                               <md-input-container>
+                  <label>Enter TX id to confirm</label>
+                  <md-input v-model="txid"></md-input>
+                        </md-input-container>
              <table width=100%>
-             <tr v-for="(item, key) in $data.multisigs"><td>{{ item.sender }}</td><td>{{ item.address }}</td><td>{{ item.accountBalance }}</td><td><md-button @click="transferToZipper(item.address, item.accountBalance)">Request transfer to Zipper multisig</md-button></td></tr>
+             <tr v-for="(item, key) in $data.multisigs"><td>{{ item.sender }}</td><td>{{ item.address }}</td><td>{{ item.accountBalance }}</td><td><md-button @click="transferToZipper(item.address, $data.txid)">Accept tx</md-button></td></tr>
              </table>
           </div>
        </md-card-content>
@@ -25,7 +28,8 @@ export default {
     multisigTotal: Number(0.0),
     multisigfactory: null,
     multisigs_found: null,
-    multisigs: []
+    multisigs: [],
+    txid: ''
   }),
   methods: {
     refreshMultisigBalance: function () {
@@ -38,11 +42,11 @@ export default {
         })
       }
     },
-    transferToZipper: function (msig, amount) {
+    transferToZipper: function (msig, txid) {
       var withdrawalrightabi = JSON.parse('[{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"_destination","type":"address"},{"name":"_value","type":"uint256"},{"name":"_data","type":"bytes"}],"name":"submitTransaction","outputs":[{"name":"transactionId","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newRealZipper","type":"address"}],"name":"changeRealZipper","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"transactionId","type":"uint256"}],"name":"revokeConfirmation","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"transactionId","type":"uint256"}],"name":"executeTransaction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"transactionId","type":"uint256"}],"name":"confirmTransaction","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_wallet","type":"address"},{"name":"_value","type":"uint256"}],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_realzipper","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"}]')
       var withdrawalright = new window.WEB3.eth.Contract(withdrawalrightabi, '0x428e6456fDEb6edc17e67E8e5A5678bf04c219Ee')
 
-      withdrawalright.methods.submitTransaction(msig, '0x21EF24FFB2116F44E7918A80CEA4f52a2EA72B17', window.WEB3.utils.toWei(amount, 'ether'), '0x').send({from: '0x21EF24FFB2116F44E7918A80CEA4f52a2EA72B17', gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 200000})
+      withdrawalright.methods.confirmTransaction(msig, txid).send({from: '0x21EF24FFB2116F44E7918A80CEA4f52a2EA72B17', gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 200000})
       .on('transactionHash', function (hash) {
         console.log('txhash ' + hash)
       })
