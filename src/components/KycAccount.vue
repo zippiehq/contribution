@@ -75,7 +75,7 @@
 
          <div v-if="$data.multisigs_found != null && $data.multisigs.length > 0 && $data.tx.length > 0" style="border-color: black; border-style: solid">
                <img src="static/img/ajax-loader.gif"><br>
-               Permit transaction in progress, do not close this window<br><a v-bind:href="'https://etherscan.io/tx/' + $data.tx" target="_blank">View transaction</a><br><br>You do not need to wait for this transaction; it may be quite slow due to Ethereum network conditions. We'll contact you with confirmation. Any doubts? <a href="https://zipperglobal.com/contact">Contact us</a>.<br>
+               Permit transaction in progress.<br><a v-bind:href="'https://etherscan.io/tx/' + $data.tx" target="_blank">View transaction</a><br><br>You do not need to wait for this transaction; it may be quite slow due to Ethereum network conditions. We'll contact you with confirmation. Any doubts? <a href="https://zipperglobal.com/contact">Contact us</a>.<br>
          </div>
 
          </div>
