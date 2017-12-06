@@ -9,10 +9,10 @@
         Thank you for your interest in Zipper project.<br><br>
         <div v-if="$data.protocol == 'http:'">
         This page is using 'http' as to make it possible for the contribution page to connect to a local Ethereum node ONLY, due to Mixed Content browser rules.<br>
-        All personal information sent to Zipper is done with 'https'. <a href="https://contribution.zipperglobal.com">Switch to https if you use the MetaMask browser extension</a><br>
+        All personal information sent to Zipper is done with 'https'. <a href="https://contribution.zipperglobal.com">Switch to https if you use the MetaMask browser extension or an web Ethereum wallet</a><br>
         </div>
         <div v-if="$data.protocol == 'https:'">
-        This page is using 'https'. You can only use this page with the MetaMask browser extension.<br>If you need to use a local Ethereum node, <a href="http://contribution.zipperglobal.com">switch to http</a>
+        This page is using 'https'. You can only use this page with the MetaMask browser extension or a web Ethereum wallet.<br>If you need to use a local Ethereum node, <a href="http://contribution.zipperglobal.com">switch to http</a>
         </div>
 
         <br>
@@ -25,7 +25,7 @@
         2. Choose that you haven't submitted your information yet<br>
         3. Create and download a temporary Ethereum account ('Contribution wallet')<br>
         4. Enter personal information, provide scans of ID and a selfie of yourself with that ID and how much you'd like to contribute; and if not using a web wallet, accept transfer.<br>
-        5. Receive acknowledgement of transfer done, or, information where to transfer funds with your web wallet.
+        5. Receive acknowledgement of transfer done or information where to transfer funds with your web wallet.
 
         <h2>Phase 2</h2>
         After completing phase 1, when we're ready, we will invite you via email to finalize your contribution through transferring control of the Contribution Wallet to Zipper<br><br>
