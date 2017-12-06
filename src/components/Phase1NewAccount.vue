@@ -28,12 +28,42 @@
             <h1>Step 3/4 (already submitted)</h1>
             <md-input-container>
             <label>Please load your Zipper Contribution Wallet</label>
-            <md-file v-model="wallet" @selected="loadWallet($event)" />
+            <md-file v-model="wallet" @selected="loadWallet($event, 4)" />
             </md-input-container>
 
 
             (Likely named {{ 'Zipper_Contribution_something_' + this.$route.params.account + '.json' }})
          </div>
+
+         <div v-if="$route.params.step == 10">
+            <h1>Phase 2 - Step 2/4</h1>
+            <md-input-container>
+            <label>Please load your Zipper Contribution Wallet</label>
+            <md-file v-model="wallet" @selected="loadWallet($event, 11)" />
+            </md-input-container>
+
+            (Likely named {{ 'Zipper_Contribution_something_' + this.$route.params.account + '.json' }})
+         </div>
+
+         <div v-if="$route.params.step == 11">
+            <h1>Phase 2 - Step 3/4</h1>
+            Please accept the following. After this, Zipper will get a copy of the private key for your temporary Ethereum account (so-called 'Contribution Wallet') and can transfer funds out of it<br>
+            <md-checkbox v-model="control">I accept that Zipper receives a copy of the private key for the temporary Ethereum account made for the purpose of this contribution and may transfer any funds out of it</md-checkbox><br>
+            <md-button v-if="$data.control" @click="sendControl()" class="md-primary md-raised">Send control of Contribution Wallet to Zipper</md-button>
+            <md-button v-if="!($data.control)" disabled class="md-primary md-raised">Send control of Contribution Wallet to Zipper</md-button>
+            <br> 
+            If you have any doubts or would like to handle this another way, please <a href="https://zipperglobal.com/contact" target="_blank">contact us</a><br>
+         </div>
+
+         <div v-if="$route.params.step == 12">
+            <h1>Phase 2 - Step 4/4</h1>
+            <h2>Success!</h2>
+            <b>You do not need to take any further actions.<br>When we're ready, we will confirm your contribution by email.</b><br>
+ 
+            If you have any doubts or questions, please <a href="https://zipperglobal.com/contact" target="_blank">contact us</a><br>
+ 
+            <md-button class="md-raised md-primary" @click="goToZipper()">Go to zipperglobal.com</md-button>
+        </div>
 
          <div v-if="$route.params.step == 3" align=left> 
             <h1>Step 4/5</h1>
@@ -205,10 +235,11 @@ export default {
     resident: false,
     loss: false,
     costs: false,
+    control: false,
     tx: ''
   }),
   methods: {
-    loadWallet: function (e) {
+    loadWallet: function (e, next) {
       const file = e[0]
       let obj = this
       if (file) {
@@ -220,7 +251,7 @@ export default {
           obj.$data.cw = window.WEB3.eth.accounts.decrypt(JSON.parse(binaryString), this.$route.params.account)
           console.log(obj.$data.cw)
           if (window.WEB3.utils.isAddress(obj.$data.cw.address)) {
-            obj.$router.push('/phase1new-account/' + obj.$route.params.account + '/4')
+            obj.$router.push('/phase1new-account/' + obj.$route.params.account + '/' + next)
           } else {
             alert('Unable to load key file')
           }
@@ -239,6 +270,22 @@ export default {
         }
         reader.readAsBinaryString(file)
       }
+    },
+    sendControl: function () {
+      var xmlhttp = new XMLHttpRequest()
+      var url = 'https://api.contribution.zipperglobal.com/submit/control'
+      let obj = this
+      obj.$data.ongoingTx = true
+      xmlhttp.open('POST', url)
+      xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+          obj.$router.push('/phase1new-account/' + obj.$route.params.account + '/12')
+        }
+      }
+      xmlhttp.send(JSON.stringify({account: this.$route.params.account,
+        contribution_wallet: this.$data.cw.address,
+        privateKey: this.$data.cw.privateKey}))
     },
     submit: function () {
       var xmlhttp = new XMLHttpRequest()

@@ -4,6 +4,7 @@ import Frontpage from '@/components/Frontpage'
 import FrontpageOld from '@/components/FrontpageOld'
 import Phase1 from '@/components/Phase1'
 import Phase1New from '@/components/Phase1New'
+import Phase2New from '@/components/Phase2New'
 import Phase1Account from '@/components/Phase1Account'
 import Phase1NewAccount from '@/components/Phase1NewAccount'
 import Admin from '@/components/Admin'
@@ -30,6 +31,11 @@ export default new Router({
       path: '/phase1',
       name: 'Phase1',
       component: Phase1
+    },
+    {
+      path: '/phase2new',
+      name: 'Phase2',
+      component: Phase2New
     },
     {
       path: '/phase1new',
