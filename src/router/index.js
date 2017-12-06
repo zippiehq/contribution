@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Frontpage from '@/components/Frontpage'
+import FrontpageOld from '@/components/FrontpageOld'
 import Phase1 from '@/components/Phase1'
+import Phase1New from '@/components/Phase1New'
 import Phase1Account from '@/components/Phase1Account'
+import Phase1NewAccount from '@/components/Phase1NewAccount'
 import Admin from '@/components/Admin'
 import Waiver from '@/components/Waiver'
 import WaiverAccount from '@/components/WaiverAccount'
@@ -19,9 +22,19 @@ export default new Router({
       component: Frontpage
     },
     {
+      path: '/frontpage-old',
+      name: 'FrontpageOld',
+      component: FrontpageOld
+    },
+    {
       path: '/phase1',
       name: 'Phase1',
       component: Phase1
+    },
+    {
+      path: '/phase1new',
+      name: 'Phase1New',
+      component: Phase1New
     },
     {
       path: '/admin/:account',
@@ -32,6 +45,11 @@ export default new Router({
       path: '/phase1-account/:account/:step',
       name: 'Phase1Account',
       component: Phase1Account
+    },
+    {
+      path: '/phase1new-account/:account/:step',
+      name: 'Phase1NewAccount',
+      component: Phase1NewAccount
     },
     {
       path: '/waiver',

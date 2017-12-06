@@ -3,6 +3,7 @@ export default {
     barstate: 0,
     projects: 1
   },
+  remoteweb3: false,
   accounts: null,
   countries: [
     {
@@ -858,7 +859,7 @@ export default {
       'code': 'SY'
     },
     {
-      'name': 'Taiwan, Province of China',
+      'name': 'Taiwan',
       'code': 'TW'
     },
     {

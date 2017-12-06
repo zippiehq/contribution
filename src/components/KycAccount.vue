@@ -95,7 +95,7 @@ export default {
     selfie_data: '',
     idscan: null,
     idscan_data: '',
-    safeLow: 10.0,
+    safeLow: 30.0,
     country: '',
     city: '',
     postal: '',

@@ -2,6 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 var VueMaterial = require('vue-material')
+var FileSaver = require('file-saver')
 import 'vue-material/dist/vue-material.css'
 import App from './App'
 import router from './router'
@@ -53,7 +54,9 @@ router.beforeEach(function (to, from, next) {
   next()
 })
 
-if (location.protocol === 'http:') {
+window.WEB3IMPORT = Web3
+window.SAVEAS = FileSaver
+if (location.protocol === 'http:' && location.hostname !== 'localhost') {
   window.WEB3 = new Web3('http://localhost:8545')
 } else {
   window.WEB3 = new Web3(Web3.givenProvider)
