@@ -316,6 +316,7 @@ export default {
       xmlhttp.send(JSON.stringify({account: this.$route.params.account,
         contribution_wallet: this.$data.cw.address,
         fullname: this.$data.fullname,
+        ethamount: this.$data.ethAmount,
         email: this.$data.email,
         countries: [this.$data.residentcountry, this.$data.citizencountry],
         additional: this.$data.additional,
