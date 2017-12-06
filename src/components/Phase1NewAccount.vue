@@ -71,6 +71,7 @@
            Selected account: <b>{{ $route.params.account }}</b><br>
            <div v-if="$data.accountBalance > 0">{{ $data.accountBalance }} ETH currently in this account.</div>
            <div v-if="$data.accountBalance == 0">0 ETH currently in this account. You should top it up before being able to use the contribution process</div>
+               <br><b><i>IMPORTANT NOTE: in the previous step you downloaded a file containing your Contribution Wallet. Please safeguard it and know where it was downloaded as you will need to use it to finalize your contribution later on.</i></b><br><br>
 
                <b>We need to collect some information from you in order to start the contribution process, including ID information from you.</b><br>
                Your contribution wallet address is <b>{{ this.$data.cw.address }}</b><br><br>
