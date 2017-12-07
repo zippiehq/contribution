@@ -173,7 +173,7 @@
            <h2>Success!</h2>
            Your information has been submitted to Zipper.<br>
 
-           Please send {{ $data.ethAmount }} ETH to the following address using your online Ethereum wallet (such as MyEtherWallet): <b>{{ $data.cw.address }}</b> (gas: 21000). We will first process your contribution when there are funds in it.<br>
+           <b>Please send {{ $data.ethAmount }} ETH to the following address using your online Ethereum wallet (such as MyEtherWallet): <b>{{ $data.cw.address }}</b> (gas: 21000). We will first process your contribution when there are funds in it.</b><br>
 
            <a v-bind:href="'https://etherscan.io/address/' + $data.cw.address" target="_blank">View contribution wallet information.</a><br><br>
 
