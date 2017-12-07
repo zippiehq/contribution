@@ -338,6 +338,23 @@ export default {
         }, 2000)
       })
     },
+    updateSafeLow () {
+      var xmlhttp = new XMLHttpRequest()
+      var url = 'https://api.contribution.zipperglobal.com/submit/safelow'
+      let obj = this
+      xmlhttp.open('POST', url)
+      xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+          console.log(xmlhttp.responseText)
+          var ret = JSON.parse(xmlhttp.responseText).safeLow
+          obj.$data.safeLow = ret
+          console.log('Corrected safeLow to ' + ret)
+          obj.$data.txCost = Number(window.WEB3.utils.fromWei(window.WEB3.utils.toWei((obj.$data.safeLow * 21000).toString(), 'gwei'), 'ether')).toFixed(5)
+        }
+      }
+      xmlhttp.send('{}')
+    },
     save: function () {
       this.ongoingTx = true
       this.$data.cw = window.WEB3.eth.accounts.create()
@@ -352,6 +369,7 @@ export default {
   },
   beforeMount () {
     this.updateBalance()
+    this.updateSafeLow()
     this.$data.txCost = Number(window.WEB3.utils.fromWei(window.WEB3.utils.toWei((this.$data.safeLow * 21000).toString(), 'gwei'), 'ether')).toFixed(5)
     this.$data.cw = null
   }

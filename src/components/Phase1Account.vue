@@ -288,7 +288,7 @@ export default {
     sendFunds: function (amount, destination, origin) {
       var obj = this
       this.$data.ongoingTx = true
-      window.WEB3.eth.sendTransaction({from: origin, to: destination, value: window.WEB3.utils.toWei(amount.toString(), 'ether'), gas: 100000, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei')})
+      window.WEB3.eth.sendTransaction({from: origin, to: destination, value: window.WEB3.utils.toWei(amount.toString(), 'ether'), gas: 50000, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei')})
       .on('transactionHash', function (hash) {
         obj.$data.ongoingTx = false
         console.log('sendFunds tx ' + hash)
@@ -306,13 +306,32 @@ export default {
     },
     goToZipper: function () {
       location.href = 'https://zipperglobal.com'
+    },
+    updateSafeLow () {
+      var xmlhttp = new XMLHttpRequest()
+      var url = 'https://api.contribution.zipperglobal.com/submit/safelow'
+      let obj = this
+      xmlhttp.open('POST', url)
+      xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+          console.log(xmlhttp.responseText)
+          var ret = JSON.parse(xmlhttp.responseText).safeLow
+          obj.$data.safeLow = ret
+          console.log('Corrected safeLow to ' + ret)
+          obj.$data.txCost = Number(window.WEB3.utils.fromWei(window.WEB3.utils.toWei((obj.$data.safeLow * 21000).toString(), 'gwei'), 'ether')).toFixed(5)
+          obj.$data.cwCost = Number(window.WEB3.utils.fromWei(window.WEB3.utils.toWei((obj.$data.safeLow * 1254611).toString(), 'gwei'), 'ether')).toFixed(5)
+        }
+      }
+      xmlhttp.send('{}')
     }
   },
   beforeMount () {
     this.updateBalance()
     this.checkMultisigs()
+    this.updateSafeLow()
     this.$data.cwCost = Number(window.WEB3.utils.fromWei(window.WEB3.utils.toWei((this.$data.safeLow * 1254611).toString(), 'gwei'), 'ether')).toFixed(5)
-    this.$data.txCost = Number(window.WEB3.utils.fromWei(window.WEB3.utils.toWei((this.$data.safeLow * 100000).toString(), 'gwei'), 'ether')).toFixed(5)
+    this.$data.txCost = Number(window.WEB3.utils.fromWei(window.WEB3.utils.toWei((this.$data.safeLow * 50000).toString(), 'gwei'), 'ether')).toFixed(5)
   }
 }
 </script>

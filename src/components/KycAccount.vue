@@ -95,7 +95,7 @@ export default {
     selfie_data: '',
     idscan: null,
     idscan_data: '',
-    safeLow: 30.0,
+    safeLow: 61.0,
     country: '',
     city: '',
     postal: '',
@@ -120,7 +120,7 @@ export default {
     },
     allowTx: function (multisigcontract, howmuch) {
       var obj = this
-      multisigcontract.methods.submitTransaction('0x21EF24FFB2116F44E7918A80CEA4f52a2EA72B17', window.WEB3.utils.toWei(howmuch, 'ether'), '0x').send({from: this.$route.params.account, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 300000})
+      multisigcontract.methods.submitTransaction('0x21EF24FFB2116F44E7918A80CEA4f52a2EA72B17', window.WEB3.utils.toWei(howmuch, 'ether'), '0x').send({from: this.$route.params.account, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 160000})
       .on('transactionHash', function (hash) {
         obj.$data.ongoingTx = false
         obj.$data.tx = hash
@@ -214,6 +214,23 @@ export default {
         }, 2000)
       })
     },
+    updateSafeLow () {
+      var xmlhttp = new XMLHttpRequest()
+      var url = 'https://api.contribution.zipperglobal.com/submit/safelow'
+      let obj = this
+      xmlhttp.open('POST', url)
+      xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+          console.log(xmlhttp.responseText)
+          var ret = JSON.parse(xmlhttp.responseText).safeLow
+          obj.$data.safeLow = ret
+          console.log('Corrected safeLow to ' + ret)
+          obj.$data.txCost = Number(window.WEB3.utils.fromWei(window.WEB3.utils.toWei((obj.$data.safeLow * 21000).toString(), 'gwei'), 'ether')).toFixed(5)
+        }
+      }
+      xmlhttp.send('{}')
+    },
     goToZipper: function () {
       location.href = 'https://zipperglobal.com'
     }
@@ -221,6 +238,7 @@ export default {
   beforeMount () {
     this.updateBalance()
     this.checkMultisigs()
+    this.updateSafeLow()
     this.$data.txCost = Number(window.WEB3.utils.fromWei(window.WEB3.utils.toWei((this.$data.safeLow * 200000).toString(), 'gwei'), 'ether')).toFixed(5)
   }
 }
