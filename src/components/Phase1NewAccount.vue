@@ -8,7 +8,7 @@
            <h1>Step 2/5</h1> 
            Selected account: <b>{{ $route.params.account }}</b><br>
            <div v-if="$data.accountBalance > 0">{{ $data.accountBalance }} ETH currently in this account.</div>
-           <div v-if="$data.accountBalance == 0">0 ETH currently in this account. You should top it up before being able to use the contribution process</div>
+           <div v-if="$data.accountBalance == 0" style="background: pink">0 ETH currently in this account. You should top it up before being able to use the contribution process</div>
  
            <md-button class="md-raised" @click="$router.push('/phase1new')">Select another account</md-button><br><br>
             Please click one of the following:<br>
@@ -70,7 +70,7 @@
                <div align=center>
            Selected account: <b>{{ $route.params.account }}</b><br>
            <div v-if="$data.accountBalance > 0">{{ $data.accountBalance }} ETH currently in this account.</div>
-           <div v-if="$data.accountBalance == 0">0 ETH currently in this account. You should top it up before being able to use the contribution process</div>
+           <div v-if="$data.accountBalance == 0">0 ETH currently in this account. You must top it up before using the contribution process</div>
                <br><b><i>IMPORTANT NOTE: in the previous step you downloaded a file containing your Contribution Wallet. Please safeguard it and know where it was downloaded as you will need to use it to finalize your contribution later on.</i></b><br><br>
 
                <b>We need to collect some information from you in order to start the contribution process, including ID information from you.</b><br>
@@ -84,16 +84,16 @@
                </div>
                <md-input-container>
                   <label>Please enter amount of ETH you want to send to your Contribution Wallet</label>
-                  <md-input v-model="ethAmount"></md-input>
+                  <md-input v-model="ethAmount" required></md-input>
                </md-input-container>
             <md-input-container>
             <label>A photo or scan of your identification paper (national ID or Passport, PDF/JPG/PNG format preferred)</label>
-            <md-file v-model="idscan" @selected="setFile($event, 'idscan_data')" />
+            <md-file v-model="idscan" @selected="setFile($event, 'idscan_data')" required />
             </md-input-container>
  
             <md-input-container>
              <label>A selfie of you holding that particular identification paper (JPG/PNG format preferred)</label>
-             <md-file v-model="selfie" @selected="setFile($event, 'selfie_data')" />
+             <md-file v-model="selfie" @selected="setFile($event, 'selfie_data')" required />
             </md-input-container>
             <md-input-container>
                 <label>Your full name</label>
@@ -124,13 +124,13 @@
 
             <md-input-container>
                 <label>Choose the country you're a resident of (where your address is)</label>
-                <md-select name="residentcountry" v-model="residentcountry">
+                <md-select name="residentcountry" v-model="residentcountry" required>
                   <md-option v-for="(item, key) in $root.models.countries" v-bind:value="item.name">{{ item.name }}</md-option>
                 </md-select>
             </md-input-container>
             <md-input-container>
                 <label>Choose the country you're a citizen of. If multiple, note this in additional comments.</label>
-                <md-select name="citizencountry" v-model="citizencountry">
+                <md-select name="citizencountry" v-model="citizencountry" required>
                   <md-option v-for="(item, key) in $root.models.countries" v-bind:value="item.name">{{ item.name }}</md-option>
                 </md-select>
            </md-input-container>
@@ -143,7 +143,7 @@
              <md-checkbox class="md-warn" v-model="resident">I confirm I'm not a resident of any of these countries: Afghanistan, Central African Republic, Democratic Republic of the Congo, Democratic People's Republic of Korea, Eritrea, Iran, Iraq, Lebanon, Libya, New Zealand, Somalia, Sudan, The United States of America and Yemen.</md-checkbox><br>
              <md-checkbox class="md-warn" v-model="loss">I accept that if I lose access to my private keys of the Contribution Wallet {{ this.$data.cw.address }}, which I saved to my computer, or my Ethereum account {{ $route.params.account }} I will be unable to access the contents of the Contribution Wallet and/or my account and neither will Zipper Global Ltd.</md-checkbox><br>
              <md-checkbox class="md-warn" v-model="costs">I accept that sending ETH to my Contribution Wallet will cost me approximately {{ $data.txCost }} ETH in blockchain processing costs.</md-checkbox><br>
-             <div v-if="$data.ongoingTx == false && this.$data.kycaccept && this.$data.resident && this.$data.loss && this.$data.costs">
+             <div v-if="$data.ongoingTx == false && this.$data.kycaccept && this.$data.resident && this.$data.loss && this.$data.costs && this.$data.residentcountry.length > 0 && this.$data.fullname.length > 0 && this.$data.email === this.$data.email2">
                <md-button class="md-raised md-primary" v-if="$root.models.remoteweb3 == true" @click="submit">Submit my information to Zipper</md-button>
                <md-button class="md-raised md-primary" v-if="$root.models.remoteweb3 == false" @click="submit">Submit my information to Zipper and send {{ $data.ethAmount }} ETH to my contribution wallet</md-button>
              </div>
