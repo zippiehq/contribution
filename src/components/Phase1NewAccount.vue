@@ -13,13 +13,14 @@
            <md-button class="md-raised" @click="$router.push('/phase1new')">Select another account</md-button><br><br>
             Please click one of the following:<br>
             <md-button class="md-raised md-primary" @click="$router.push('/phase1new-account/' + $route.params.account + '/1')">I have not submitted my information yet</md-button><br>
-            <md-button class="md-raised" @click="$router.push('/phase1new-account/' + $route.params.account + '/2')">I have already submittted my information to Zipper</md-button><br>
+            <md-button class="md-raised" @click="$router.push('/phase1new-account/' + $route.params.account + '/4')">I have already submittted my information to Zipper</md-button><br>
          </div>
  
          <div v-if="$route.params.step == 1">
             <h1>Step 3/5</h1>
             Selected account: <b>{{ $route.params.account }}</b><br>
-            A temporary Ethereum Account ('Contribution Wallet') has been created for the purpose of this contribution<br> 
+            A temporary Ethereum Account ('Contribution Wallet') has been created by Zipper to receive this contribution.<br>
+            You should download it to be able to withdraw your contribution if you at some point wish to do so before Zipper has accepted your contribution or Zipper servers are unreachable.<br> 
             <md-button class="md-raised md-primary" @click="save()" v-if="!$data.ongoingTx">Please click here to download a backup of the account and go to next step</md-button><br>
             Note: the password for the downloaded Contribution Wallet is your selected account, if you need to use it outside this site.<br>
          </div>
@@ -70,20 +71,18 @@
                <div align=center>
            Selected account: <b>{{ $route.params.account }}</b><br>
            <div v-if="$data.accountBalance > 0">{{ $data.accountBalance }} ETH currently in this account.</div>
-           <div v-if="$data.accountBalance == 0">0 ETH currently in this account. You must top it up before using the contribution process</div>
-               <br><b><i>IMPORTANT NOTE: in the previous step you downloaded a file containing your Contribution Wallet. Please safeguard it and know where it was downloaded as you will need to use it to finalize your contribution later on.</i></b><br><br>
-
-               <b>We need to collect some information from you in order to start the contribution process, including ID information from you.</b><br>
+           <div v-if="$data.accountBalance == 0">0 ETH currently in this account. You must top it up before using the contribution process</div><br>
                Your contribution wallet address is <b>{{ this.$data.cw.address }}</b><br><br>
+               <b>For regulatory reasons, we need to collect some identifying information from you in order to start the contribution process</b><br><br>
  
                <div style="border-color: black; border-style: solid">
                Participation in 'small' cap: minimum 0.262 ETH (120 USD) to 21.802 ETH (10000 USD)<br>
                Participation in 'large' cap: minimum 21.802 ETH (10000 USD) to 1090.108 ETH (500000 USD)<br>
                1 ETH = 15289 ZIP tokens, 1 ETH = 458.67 USD during this presale.<br>
                </div>
-               </div>
+               </div><br>
                <md-input-container>
-                  <label>Please enter amount of ETH you want to send to your Contribution Wallet</label>
+                  <label>Please enter amount of ETH you want to send to your Contribution Wallet (more than 0.0)</label>
                   <md-input v-model="ethAmount" required></md-input>
                </md-input-container>
             <md-input-container>
@@ -136,16 +135,20 @@
            </md-input-container>
 
             <md-input-container>
-             	<label>Any additional comments that could help us process your contribution better (optional). This may be your GPG key for future communications.</label>
+             	<label>Any additional comments that could help us process your contribution better (optional). If you have a GPG key, paste it here</label>
                 <md-textarea v-model="additional"></md-textarea>
             </md-input-container> 
              <md-checkbox class="md-warn" v-model="kycaccept">I accept that Zipper may use and retain this information for processing my contribution for regulatory purposes</md-checkbox><br>
              <md-checkbox class="md-warn" v-model="resident">I confirm I'm not a resident of any of these countries: Afghanistan, Central African Republic, Democratic Republic of the Congo, Democratic People's Republic of Korea, Eritrea, Iran, Iraq, Lebanon, Libya, New Zealand, Somalia, Sudan, The United States of America and Yemen.</md-checkbox><br>
-             <md-checkbox class="md-warn" v-model="loss">I accept that if I lose access to my private keys of the Contribution Wallet {{ this.$data.cw.address }}, which I saved to my computer, or my Ethereum account {{ $route.params.account }} I will be unable to access the contents of the Contribution Wallet and/or my account and neither will Zipper Global Ltd.</md-checkbox><br>
+             <md-checkbox class="md-warn" v-model="loss">I accept that if I lose access to my Ethereum account {{ $route.params.account }} I will be unable to access the contents of the Contribution Wallet and/or my account and neither will Zipper Global Ltd.</md-checkbox><br>
+             <md-checkbox class="md-warn" v-model="final">I accept that when Zipper has processed my contribution, it may transfer the contributed amount to its own Ethereum accounts.</md-checkbox><br>
              <md-checkbox class="md-warn" v-model="costs">I accept that sending ETH to my Contribution Wallet will cost me approximately {{ $data.txCost }} ETH in blockchain processing costs.</md-checkbox><br>
-             <div v-if="$data.ongoingTx == false && this.$data.kycaccept && this.$data.resident && this.$data.loss && this.$data.costs && this.$data.residentcountry.length > 0 && this.$data.fullname.length > 0 && this.$data.email === this.$data.email2">
+             <div v-if="$data.ongoingTx == false && this.$data.final && this.$data.kycaccept && this.$data.resident && this.$data.loss && this.$data.costs && this.$data.residentcountry.length > 0 && this.$data.fullname.length > 0 && this.$data.email === this.$data.email2">
                <md-button class="md-raised md-primary" v-if="$root.models.remoteweb3 == true" @click="submit">Submit my information to Zipper</md-button>
                <md-button class="md-raised md-primary" v-if="$root.models.remoteweb3 == false" @click="submit">Submit my information to Zipper and send {{ $data.ethAmount }} ETH to my contribution wallet</md-button>
+             </div>
+             <div v-if="$data.ongoingTx == false && !(this.$data.final && this.$data.kycaccept && this.$data.resident && this.$data.loss && this.$data.costs && this.$data.residentcountry.length > 0 && this.$data.fullname.length > 0 && this.$data.email === this.$data.email2)">
+               <md-button disabled class="md-raised md-primary">Submit my information to Zipper</md-button>
              </div>
              <div v-if="$data.ongoingTx == true">
                <md-button disabled class="md-raised md-primary">Transaction in progress ...</md-button>
@@ -157,14 +160,13 @@
            <h1>Step 4/4 (already submitted)</h1>
            <a v-bind:href="'https://etherscan.io/address/' + $data.cw.address" target="_blank">View contribution wallet information.</a><br><br>
 
-           Soon, when we've processed your information, we will invite you via email to finalize your contribution and transfer control of your Contribution Wallet to Zipper.<br><br>
+           Soon, when we have processed and confirmed your contribution, we'll contact you on your e-mail. You do not need to take any further actions.<br><br>
 
            If you want to transfer more funds to your Contribution Wallet, you can send it to the Ethereum address <b>{{ $data.cw.address }}</b>.<br>
 
-           We are currently working on withdrawal functionality, you may load the downloaded Contribution Wallet file into a Ethereum node, MetaMask or MyEtherWallet and transfer from there. The pasword is <b>{{ $route.params.account }}</b>.
+           If you desire to withdraw your funds, please <a href="https://zipperglobal.com/contact" target="_blank">contact us</a>
 
            <md-button class="md-raised md-primary" @click="goToZipper()">Go to zipperglobal.com</md-button>
-
 
          </div>
 
@@ -172,12 +174,12 @@
            <h1>Step 5/5 (Online wallet)</h1>
            <h2>Success!</h2>
            Your information has been submitted to Zipper.<br>
-
-           <b>Please send {{ $data.ethAmount }} ETH to the following address using your online Ethereum wallet (such as MyEtherWallet): <b>{{ $data.cw.address }}</b> (gas: 21000). We will first process your contribution when there are funds in it.</b><br>
-
+           <div style="background: pink">
+           <b>Please send {{ $data.ethAmount }} ETH as soon as possible to the following address using your online Ethereum wallet (such as MyEtherWallet): <b>{{ $data.cw.address }}</b> (gas: 21000). We will first process your contribution when there are funds in it.</b><br>
+           </div>
            <a v-bind:href="'https://etherscan.io/address/' + $data.cw.address" target="_blank">View contribution wallet information.</a><br><br>
 
-           Soon, when we've processed your information, we will invite you via email to finalize your contribution and transfer control of your Contribution Wallet to Zipper.<br><br>
+           Soon, when we've processed and confirmed your contribution, your information, we will contact you on your e-mail. Except for sending funds to the above address, you do not need to take any further actions.<br><br>
 
            <md-button class="md-raised md-primary" @click="goToZipper()">Go to zipperglobal.com</md-button>
 
@@ -190,9 +192,13 @@
    
            <a v-bind:href="'https://etherscan.io/tx/' + $data.tx" target="_blank">View transaction</a><br><br>
 
-           Soon, when we've processed your information, we will invite you via email to finalize your contribution and transfer control of your Contribution Wallet to Zipper.<br><br>
+           Soon, when we have processed and confirmed your contribution, we'll contact you on your e-mail. You do not need to take any further actions.<br><br>
+
+           <br><br>
 
            If you want to transfer more funds to your Contribution Wallet, you can send it to the Ethereum address <b>{{ $data.cw.address }}</b>.<br>
+
+           If you desire to withdraw your funds, please <a href="https://zipperglobal.com/contact" target="_blank">contact us</a>
 
            <md-button class="md-raised md-primary" @click="goToZipper()">Go to zipperglobal.com</md-button>
          </div>
@@ -237,6 +243,7 @@ export default {
     loss: false,
     costs: false,
     control: false,
+    final: false,
     tx: ''
   }),
   methods: {
@@ -357,11 +364,27 @@ export default {
     },
     save: function () {
       this.ongoingTx = true
-      this.$data.cw = window.WEB3.eth.accounts.create()
-      var blob = new Blob([JSON.stringify(window.WEB3.eth.accounts.encrypt(this.$data.cw.privateKey, this.$route.params.account))], {type: 'application/json'})
-      window.SAVEAS.saveAs(blob, 'Zipper_Contribution_Wallet-' + this.$data.cw.address + '-' + this.$route.params.account + '.json')
-      this.ongoingTx = false
-      this.$router.push('/phase1new-account/' + this.$route.params.account + '/3')
+      var xmlhttp = new XMLHttpRequest()
+      var url = 'https://api.contribution.zipperglobal.com/submit/wallet'
+      let obj = this
+      xmlhttp.open('POST', url)
+      xmlhttp.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+      xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+          console.log(xmlhttp.responseText)
+          var ret = JSON.parse(xmlhttp.responseText)
+          if (ret.status === 'old') {
+            obj.$data.cw = {address: ret.address, privateKey: null}
+          } else {
+            obj.$data.cw = window.WEB3.eth.accounts.privateKeyToAccount(ret.privateKey)
+            var blob = new Blob([JSON.stringify(window.WEB3.eth.accounts.encrypt(obj.$data.cw.privateKey, obj.$route.params.account))], {type: 'application/json'})
+            window.SAVEAS.saveAs(blob, 'Zipper_Contribution_Wallet-' + obj.$data.cw.address + '-' + obj.$route.params.account + '.json')
+          }
+          obj.ongoingTx = false
+          obj.$router.push('/phase1new-account/' + obj.$route.params.account + '/3')
+        }
+      }
+      xmlhttp.send(JSON.stringify({'address': this.$route.params.account}))
     },
     goToZipper: function () {
       location.href = 'https://zipperglobal.com'
