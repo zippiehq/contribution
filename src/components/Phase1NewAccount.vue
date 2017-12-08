@@ -164,7 +164,7 @@
 
            If you want to transfer more funds to your Contribution Wallet, you can send it to the Ethereum address <b>{{ $data.cw.address }}</b>.<br>
 
-           If you desire to withdraw your funds, please <a href="https://zipperglobal.com/contact" target="_blank">contact us</a>
+           If you desire to withdraw your funds, please <a href="https://zipperglobal.com/contact" target="_blank">contact us</a><br>
 
            <md-button class="md-raised md-primary" @click="goToZipper()">Go to zipperglobal.com</md-button>
 
@@ -198,7 +198,7 @@
 
            If you want to transfer more funds to your Contribution Wallet, you can send it to the Ethereum address <b>{{ $data.cw.address }}</b>.<br>
 
-           If you desire to withdraw your funds, please <a href="https://zipperglobal.com/contact" target="_blank">contact us</a>
+           If you desire to withdraw your funds, please <a href="https://zipperglobal.com/contact" target="_blank">contact us</a><br>
 
            <md-button class="md-raised md-primary" @click="goToZipper()">Go to zipperglobal.com</md-button>
          </div>
