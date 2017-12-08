@@ -135,7 +135,7 @@
            </md-input-container>
 
             <md-input-container>
-             	<label>Any additional comments that could help us process your contribution better (optional). If you have a GPG key, paste it here</label>
+             	<label>Any additional comments that could help us process your contribution better (optional).</label>
                 <md-textarea v-model="additional"></md-textarea>
             </md-input-container> 
              <md-checkbox class="md-warn" v-model="kycaccept">I accept that Zipper may use and retain this information for processing my contribution for regulatory purposes</md-checkbox><br>
