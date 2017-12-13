@@ -75,7 +75,7 @@
                <div style="border-color: black; border-style: solid">
                Participation in 'small' cap: minimum 0.262 ETH (120 USD) to 21.802 ETH (10000 USD)<br>
                Participation in 'large' cap: minimum 21.802 ETH (10000 USD) to 1090.108 ETH (500000 USD)<br>
-               1 ETH = 15289 ZIP tokens, 1 ETH = 458.67 USD during this presale.<br>
+               1 ETH = 15289 ZIP tokens, 1 ETH = 458.67 USD or end date rate, whichever is higher (contributor friendly)<br>
                </div>
                </div><br>
                <md-input-container>
