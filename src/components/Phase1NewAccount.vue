@@ -11,7 +11,9 @@
            <div v-if="$data.accountBalance == 0" style="background: pink">0 ETH currently in this account. You should top it up before being able to use the contribution process</div>
  
            <md-button class="md-raised" @click="$router.push('/phase1new')">Select another account</md-button><br><br>
-            <md-button class="md-raised md-primary" @click="save()">I have not submitted my information yet</md-button><br>
+            
+            <md-button class="md-raised md-primary" @click="save()" v-if="!this.ongoingTx">I have not submitted my information yet</md-button><br>
+            <md-button class="md-raised md-primary" @click="save()" v-if="this.ongoingTx == true" disabled>I have not submitted my information yet</md-button><br>
          </div>
  
          <div v-if="$route.params.step == 1">
