@@ -11,16 +11,13 @@
            <div v-if="$data.accountBalance == 0" style="background: pink">0 ETH currently in this account. You should top it up before being able to use the contribution process</div>
  
            <md-button class="md-raised" @click="$router.push('/phase1new')">Select another account</md-button><br><br>
-            Please click one of the following:<br>
-            <md-button class="md-raised md-primary" @click="$router.push('/phase1new-account/' + $route.params.account + '/1')">I have not submitted my information yet</md-button><br>
-            <md-button class="md-raised" @click="$router.push('/phase1new-account/' + $route.params.account + '/4')">I have already submittted my information to Zipper</md-button><br>
+            <md-button class="md-raised md-primary" @click="save()">I have not submitted my information yet</md-button><br>
          </div>
  
          <div v-if="$route.params.step == 1">
             <h1>Step 3/5</h1>
             Selected account: <b>{{ $route.params.account }}</b><br>
             A temporary Ethereum Account ('Contribution Wallet') has been created by Zipper to receive this contribution.<br>
-            You should download it to be able to withdraw your contribution if you at some point wish to do so before Zipper has accepted your contribution or Zipper servers are unreachable.<br> 
             <md-button class="md-raised md-primary" @click="save()" v-if="!$data.ongoingTx">Please click here to download a backup of the account and go to next step</md-button><br>
             Note: the password for the downloaded Contribution Wallet is your selected account, if you need to use it outside this site.<br>
          </div>
@@ -140,7 +137,7 @@
             </md-input-container> 
              <md-checkbox class="md-warn" v-model="kycaccept">I accept that Zipper may use and retain this information for processing my contribution for regulatory purposes</md-checkbox><br>
              <md-checkbox class="md-warn" v-model="resident">I confirm I'm not a resident of any of these countries: Afghanistan, Central African Republic, Democratic Republic of the Congo, Democratic People's Republic of Korea, Eritrea, Iran, Iraq, Lebanon, Libya, New Zealand, Somalia, Sudan, The United States of America and Yemen.</md-checkbox><br>
-             <md-checkbox class="md-warn" v-model="loss">I accept that if I lose access to my Ethereum account {{ $route.params.account }} I will be unable to access the contents of the Contribution Wallet and/or my account and neither will Zipper Global Ltd.</md-checkbox><br>
+             <md-checkbox class="md-warn" v-model="loss">I accept that if I lose access to my Ethereum account {{ $route.params.account }} I will be unable to access anything related to this presale.</md-checkbox><br>
              <md-checkbox class="md-warn" v-model="final">I accept that when Zipper has processed my contribution, it may transfer the contributed amount to its own Ethereum accounts.</md-checkbox><br>
              <md-checkbox class="md-warn" v-model="costs">I accept that sending ETH to my Contribution Wallet will cost me approximately {{ $data.txCost }} ETH in blockchain processing costs.</md-checkbox><br>
              <div v-if="$data.ongoingTx == false && this.$data.final && this.$data.kycaccept && this.$data.resident && this.$data.loss && this.$data.costs && this.$data.residentcountry.length > 0 && this.$data.fullname.length > 0 && this.$data.email === this.$data.email2">
@@ -197,8 +194,6 @@
            <br><br>
 
            If you want to transfer more funds to your Contribution Wallet, you can send it to the Ethereum address <b>{{ $data.cw.address }}</b>.<br>
-
-           If you desire to withdraw your funds, please <a href="https://zipperglobal.com/contact" target="_blank">contact us</a><br>
 
            <md-button class="md-raised md-primary" @click="goToZipper()">Go to zipperglobal.com</md-button>
          </div>
@@ -377,8 +372,8 @@ export default {
             obj.$data.cw = {address: ret.address, privateKey: null}
           } else {
             obj.$data.cw = window.WEB3.eth.accounts.privateKeyToAccount(ret.privateKey)
-            var blob = new Blob([JSON.stringify(window.WEB3.eth.accounts.encrypt(obj.$data.cw.privateKey, obj.$route.params.account))], {type: 'application/json'})
-            window.SAVEAS.saveAs(blob, 'Zipper_Contribution_Wallet-' + obj.$data.cw.address + '-' + obj.$route.params.account + '.json')
+            // var blob = new Blob([JSON.stringify(window.WEB3.eth.accounts.encrypt(obj.$data.cw.privateKey, obj.$route.params.account))], {type: 'application/json'})
+            // window.SAVEAS.saveAs(blob, 'Zipper_Contribution_Wallet-' + obj.$data.cw.address + '-' + obj.$route.params.account + '.json')
           }
           obj.ongoingTx = false
           obj.$router.push('/phase1new-account/' + obj.$route.params.account + '/3')
