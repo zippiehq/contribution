@@ -1,6 +1,6 @@
 <template>
 	<div id="app" class="myapp">
-		<md-whiteframe md-tag="md-toolbar" md-elevation="1" md-theme="light-blue" class="md-dense">
+		<md-whiteframe md-tag="md-toolbar" md-elevation="1" md-theme="light-blue" class="md-dense" v-if="$route.name != 'Nominee'">
 			<div class="md-toolbar-container">
 				<md-button class="md-icon-button">
 					<md-icon md-src="static/img/zipper_logo_square_transparent_30x30.png"></md-icon>

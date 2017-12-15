@@ -6,6 +6,7 @@ import Phase1 from '@/components/Phase1'
 import Phase1New from '@/components/Phase1New'
 import Phase2New from '@/components/Phase2New'
 import Phase1Account from '@/components/Phase1Account'
+import Nominee from '@/components/Nominee'
 import Phase1NewAccount from '@/components/Phase1NewAccount'
 import Admin from '@/components/Admin'
 import Waiver from '@/components/Waiver'
@@ -76,6 +77,11 @@ export default new Router({
       path: '/kyc-account/:account/:step',
       name: 'KycAccount',
       component: KycAccount
+    },
+    {
+      path: '/nominee/:step',
+      name: 'Nominee',
+      component: Nominee
     }
   ]
 })
