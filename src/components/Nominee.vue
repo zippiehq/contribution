@@ -52,7 +52,7 @@
   1. When I (hereafter Holder) have received {{ $data.ethAmount }} ETH (Amount) from Owner into my Ethereum Account, address {{ $data.ethAddress }}, on the Ethereum Foundation network (as commonly defined as such as of 15/12/2017), I will participate in the Zipper Project Presale at https://zipperglobal.com/presale and contribute the Amount (Contribution).<br>
   2. Any rights gained by this Contribution, such as Ethereum ERC20 tokens, do not belong to me but belong to {{ $data.owner }} (hereinafter referred to as the Owner) ({{ $data.owner_info }}) of {{ $data.owner_address }}.<br>
   3. I will hold such rights or said Ethereum ERC20 tokens as a nominee for the Owner.<br>
-  4. I further hold the said ERC20 tokens and all dividends, rights and interest accruing to or to accrue upon the same or any of them <b>Upon Trust</b> for the Owner.<br>
+  4. I further hold said ERC20 tokens and all dividends, rights and interest accruing to or to accrue upon the same or any of them <b>Upon Trust</b> for the Owner.<br>
   5. I shall not transfer, pay or deal with the said Amount, Ethereum ERC20 Tokens or the dividends, rights and interest accruable or payable to the Holder in respect of the same except upon explicit instructions in writing or in such manner as the Owner shall from time to time direct the Holder to do so.<br>
   6. This declaration shall be governed by and construed in accordance with the laws of Hong Kong and the parties irrevocably submit to the exclusive jurisdiction of the courts of Hong Kong.<br>
   <br>
