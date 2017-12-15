@@ -54,7 +54,7 @@
   3. I will hold such rights or said Ethereum ERC20 tokens as a nominee for the Owner.<br>
   4. I further hold the said ERC20 tokens and all dividends, rights and interest accruing to or to accrue upon the same or any of them <b>Upon Trust</b> for the Owner.<br>
   5. I shall not transfer, pay or deal with the said Amount, Ethereum ERC20 Tokens or the dividends, rights and interest accruable or payable to the Holder in respect of the same except upon explicit instructions in writing or in such manner as the Owner shall from time to time direct the Holder to do so.<br>
-  6. This declaration shall be governed by and construed in accordance with the laws of Hong Kong and the parties irrevocably submit to the non-exclusive jurisdiction of the courts of Hong Kong.<br>
+  6. This declaration shall be governed by and construed in accordance with the laws of Hong Kong and the parties irrevocably submit to the exclusive jurisdiction of the courts of Hong Kong.<br>
   <br>
   Dated this<br>
   Signed by the Holder
