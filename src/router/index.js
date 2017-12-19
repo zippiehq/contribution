@@ -13,6 +13,7 @@ import Waiver from '@/components/Waiver'
 import WaiverAccount from '@/components/WaiverAccount'
 import Kyc from '@/components/Kyc'
 import KycAccount from '@/components/KycAccount'
+import Multisig from '@/components/Multisig'
 
 Vue.use(Router)
 
@@ -72,6 +73,11 @@ export default new Router({
       path: '/kyc',
       name: 'Kyc',
       component: Kyc
+    },
+    {
+      path: '/multisig',
+      name: 'Multisig',
+      component: Multisig
     },
     {
       path: '/kyc-account/:account/:step',
