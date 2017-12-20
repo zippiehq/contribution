@@ -13,6 +13,7 @@
             </md-input-container>
 
           Paper wallet address: {{ $data.cw != null ? $data.cw.address : 'not loaded' }}<br>
+          TX id in progress: <a v-bind:href="'https://etherscan.io/tx/' + $data.ongoingTx" target="_blank">{{ $data.ongoingTx }}</a>.
 
           <md-input-container>
                 <label>Transaction ID</label>
@@ -35,9 +36,22 @@
                 <md-input v-model="data" required></md-input>
           </md-input-container>
 
-          TX id in progress: <a v-bind:href="'https://etherscan.io/tx/' + $data.ongoingTx" target="_blank">{{ $data.ongoingTx }}</a>.
 
           <md-button class="md-raised md-primary" @click="submitTransaction">Submit transaction</md-button>
+
+          <md-input-container>
+                <label>New owner address</label>
+                <md-input v-model="newOwner" required></md-input>
+          </md-input-container>
+
+          <md-button class="md-raised md-primary" @click="addNewOwner">Create new owner tx</md-button>
+
+          <md-input-container>
+                <label>New sig requirement</label>
+                <md-input v-model="newRequirement" required></md-input>
+          </md-input-container>
+
+          <md-button class="md-raised md-primary" @click="changeRequirement">Create new requirement tx</md-button>
 
       </md-card>
     </div>
@@ -60,12 +74,24 @@ export default {
     safeLow: 10.0,
     safeLowWait: 1.8,
     multisigcontract: null,
+    newOwner: '0x',
+    newRequirement: '1',
     ongoingTx: ''
   }),
   methods: {
+    addNewOwner: function () {
+      this.$data.dest = '0x3f0A24A07b2D729a02640Deb1D27cD00Da72B799'
+      this.$data.value = '0'
+      this.$data.data = this.$data.multisigcontract.methods.addOwner(this.$data.newOwner).encodeABI()
+    },
+    changeRequirement: function () {
+      this.$data.dest = '0x3f0A24A07b2D729a02640Deb1D27cD00Da72B799'
+      this.$data.value = '0'
+      this.$data.data = this.$data.multisigcontract.methods.changeRequirement(this.$data.newRequirement).encodeABI()
+    },
     submitTransaction: function () {
       let obj = this
-      this.$data.multisigcontract.methods.submitTransaction(this.$data.dest, window.WEB3.utils.toWei(this.$data.value, 'ether'), this.$data.data).send({from: this.$data.cw.address, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 200000})
+      this.$data.multisigcontract.methods.submitTransaction(this.$data.dest, window.WEB3.utils.toWei(this.$data.value, 'ether'), this.$data.data).send({from: this.$data.cw.address, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 300000})
       .on('transactionHash', function (hash) {
         obj.$data.ongoingTx = hash
       })
