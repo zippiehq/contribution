@@ -5,7 +5,7 @@
        <md-card-content> 
         <div align=center>
          <div v-if="$route.params.step == 0"> 
-           <h1>Step 2/5</h1> 
+           <h1>Step 2/4</h1> 
            Selected account: <b>{{ $route.params.account }}</b><br>
            <div v-if="$data.accountBalance > 0">{{ $data.accountBalance }} ETH currently in this account.</div>
            <div v-if="$data.accountBalance == 0" style="background: pink">0 ETH currently in this account. You should top it up before being able to use the contribution process</div>
@@ -170,7 +170,7 @@
          </div>
 
          <div v-if="$route.params.step == 5">
-           <h1>Step 5/5 (Online wallet)</h1>
+           <h1>Step 4/4 (Online wallet)</h1>
            <h2>Success!</h2>
            Your information has been submitted to Zipper.<br>
            <div style="background: pink">
@@ -185,7 +185,7 @@
          </div>
 
          <div v-if="$route.params.step == 6">
-           <h1>Step 5/5</h1>
+           <h1>Step 4/4</h1>
            <h2>Success!</h2>
            Your information has been submitted to Zipper and your funds are on their way to your Contribution Wallet.<br><br>
    

@@ -18,13 +18,12 @@
         <br>
         Please first read <a href="https://zipperglobal.com/presale/" target="_blank">our token pre-sale page before proceeding</a><br><br>
         <b><a href="/#/frontpage-old">If you have already started your contribution with the old system (before 6 December 2017), please click here to continue</a></b><br><br>
-        We will guide you through five steps so you are able to contribute to the project:<br>
+        We will guide you through four steps so you are able to contribute to the project:<br>
          
         1. You select the ETH wallet you want to use for the contribution through MetaMask or Parity or write your Ethereum account address as stated in your web wallet.<br>
         2. Choose that you haven't submitted your information yet<br>
-        3. Create a temporary Ethereum account ('Contribution wallet')<br>
-        4. Enter personal information, provide scans of ID and a selfie of yourself with that ID and how much you'd like to contribute; and if not using a web wallet, accept the transfer of those funds.<br>
-        5. Receive acknowledgement of transfer done or information where to transfer funds with your web wallet.<br><br>
+        3. Enter personal information, provide scans of ID and a selfie of yourself with that ID and how much you'd like to contribute; and if not using a web wallet, accept the transfer of those funds.<br>
+        4. Receive acknowledgement of transfer done or information where to transfer funds with your web wallet.<br><br>
         <i>Note: Until your contribution has been processed and confirmed by Zipper, no offer, sale, or any form of transaction between you and Zipper Global Ltd. has been entered into.</i><br>
 
         <md-checkbox class="md-warn" v-model="terms"></md-checkbox>I have read and agree to the <a href="https://zipperglobal.com/contribution-terms-conditions/" target="_blank">Zipper Contribution Terms &amp; Conditions</a> and understand the risks mentioned therein<br>
@@ -37,7 +36,7 @@
        </md-card-content>
       </md-card>
     </div>
-    <div align=right>v2.4.0</div>
+    <div align=right>v3.0.0</div>
   </div>
 </template>
 
