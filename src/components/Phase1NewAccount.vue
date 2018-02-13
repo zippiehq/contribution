@@ -174,7 +174,7 @@
            <h2>Success!</h2>
            Your information has been submitted to Zipper.<br>
            <div style="background: pink">
-           <b>Please send {{ $data.ethAmount }} ETH as soon as possible to the following address using your online Ethereum wallet (such as MyEtherWallet): <b>{{ $data.cw.address }}</b> (gas: 21000). We will first process your contribution when there are funds in it.</b><br>
+           <b>Please send {{ $data.ethAmount }} ETH as SOON AS POSSIBLE to the following address using your online Ethereum wallet (such as MyEtherWallet): <b>{{ $data.cw.address }}</b> (gas: 21000). We will first process your contribution when there are funds in it.</b><br>
            </div>
            <a v-bind:href="'https://etherscan.io/address/' + $data.cw.address" target="_blank">View contribution wallet information.</a><br><br>
 
@@ -321,6 +321,7 @@ export default {
       xmlhttp.send(JSON.stringify({account: this.$route.params.account,
         contribution_wallet: this.$data.cw.address,
         fullname: this.$data.fullname,
+        remoteweb3: this.$root.models.remoteweb3,
         ethamount: this.$data.ethAmount,
         email: this.$data.email,
         countries: [this.$data.residentcountry, this.$data.citizencountry],

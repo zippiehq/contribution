@@ -12,6 +12,8 @@ import Admin from '@/components/Admin'
 import Waiver from '@/components/Waiver'
 import WaiverAccount from '@/components/WaiverAccount'
 import Kyc from '@/components/Kyc'
+import PrivateKyc from '@/components/PrivateKyc'
+import PresaleAcceptance from '@/components/PresaleAcceptance'
 import KycAccount from '@/components/KycAccount'
 import Multisig from '@/components/Multisig'
 
@@ -60,6 +62,11 @@ export default new Router({
       component: Phase1NewAccount
     },
     {
+      path: '/presaleacceptance/:email',
+      name: 'PresaleAcceptance',
+      component: PresaleAcceptance
+    },
+    {
       path: '/waiver',
       name: 'Waiver',
       component: Waiver
@@ -73,6 +80,11 @@ export default new Router({
       path: '/kyc',
       name: 'Kyc',
       component: Kyc
+    },
+    {
+      path: '/privatekyc',
+      name: 'PrivateKyc',
+      component: PrivateKyc
     },
     {
       path: '/multisig',
