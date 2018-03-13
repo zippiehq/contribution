@@ -7,7 +7,7 @@
             <h1>KYC for Zipper Token Sale</h1>
 
             <md-input-container>
-                <label>E-mail (We will contact you from @zipperglobal.com-mails)</label>
+                <label>E-mail (We will contact you from @zipperglobal.com-mails) - MUST USE THE E-MAIL YOU ARE COMMUNICATING WITH US FROM </label>
                 <md-input v-model="email" required></md-input>
             </md-input-container>
 
@@ -135,6 +135,14 @@ export default {
       }
     },
     submit: function () {
+      if (this.$data.idscan_data === '') {
+        alert('You must attach a scan/picture of your ID')
+        return
+      }
+      if (this.$data.selfie_data === '') {
+        alert('You must attach a picture of you holding your ID')
+        return
+      }
       if (this.$data.email === '' || (this.$data.email !== this.$data.email2)) {
         alert('Please make sure your e-mail is correct and same in both fields')
         return

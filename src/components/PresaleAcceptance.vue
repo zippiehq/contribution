@@ -4,7 +4,7 @@
       <md-card style="margin-left: 10%; margin-right: 10%">
        <md-card-content> 
         <div align=center>
-            <h1>KYC for Zipper Token Sale</h1>
+            <h1>Presale terms change no longer possible</h1>
         </div>
        </md-card-content>
       </md-card>

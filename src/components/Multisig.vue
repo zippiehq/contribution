@@ -11,6 +11,9 @@
             <label>Please load your Ethereum Wallet</label>
             <md-file v-model="wallet" @selected="loadWallet($event)" />
             </md-input-container>
+
+           <md-button class="md-raised md-primary" @click="loadLedger">Use Ledger Nano S</md-button>
+
             Paper wallet address: <b>{{ $data.cw != null ? $data.cw.address : 'not loaded' }}</b><br><br>
 
             <md-input-container>
@@ -67,6 +70,8 @@
 
           <md-button class="md-raised md-primary" @click="addNewOwner">Create new owner tx</md-button>
 
+          <md-button class="md-raised md-primary" @click="removeOwner">Remove owner tx</md-button>
+
           <md-input-container>
                 <label>New sig requirement</label>
                 <md-input v-model="newRequirement" required></md-input>
@@ -90,6 +95,9 @@
 </template>
 
 <script>
+var ProviderEngine = require('web3-provider-engine')
+var LedgerWalletSubproviderFactory = require('ledger-wallet-provider').default
+var Web3Subprovider = require('web3-provider-engine/subproviders/web3.js')
 
 export default {
   name: 'multisig',
@@ -138,6 +146,11 @@ export default {
       this.$data.value = '0'
       this.$data.data = this.$data.multisigcontract.methods.addOwner(this.$data.newOwner).encodeABI()
     },
+    removeOwner: function () {
+      this.$data.dest = this.$data.multisig
+      this.$data.value = '0'
+      this.$data.data = this.$data.multisigcontract.methods.removeOwner(this.$data.newOwner).encodeABI()
+    },
     changeRequirement: function () {
       this.$data.dest = this.$data.multisig
       this.$data.value = '0'
@@ -175,6 +188,19 @@ export default {
       this.$data.multisigcontract.methods.confirmTransaction(this.$data.txid).send({from: this.$data.cw.address, gasPrice: window.WEB3.utils.toWei(this.$data.safeLow.toString(), 'gwei'), gas: 200000})
       .on('transactionHash', function (hash) {
         obj.$data.ongoingTx = hash
+      })
+    },
+    loadLedger: function (e) {
+      let obj = this
+      var engine = new ProviderEngine()
+      LedgerWalletSubproviderFactory(window.WEB3.eth.net.getId, "44'/60'/0'/0").then((provider) => {
+        engine.addProvider(provider)
+        engine.addProvider(new Web3Subprovider(window.WEB3.currentProvider))
+        engine.start()
+        window.WEB3.setProvider(engine)
+        window.WEB3.eth.getAccounts().then((result) => {
+          obj.$data.cw = { address: result[0] }
+        })
       })
     },
     loadWallet: function (e) {
